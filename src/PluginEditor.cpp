@@ -435,11 +435,12 @@ void LMOneAudioProcessorEditor::resized()
         place (lofiSlider,    lofiLabel);
         place (tuneSlider,    tuneLabel);
         {
-            // Shuffle cell: label on top, < > steppers, LED readout below.
+            // Shuffle cell: label on top, LED readout, then < > steppers beneath it.
             auto cell = g.removeFromLeft (kW);
             shuffleLabel.setBounds (cell.removeFromTop (16));
-            shuffleLed.setBounds (cell.removeFromBottom (18).reduced (8, 1));
-            auto arrows = cell.withSizeKeepingCentre (54, juce::jmin (cell.getHeight(), 22));
+            auto arrowsRow = cell.removeFromBottom (20);
+            shuffleLed.setBounds (cell.reduced (8, 2));
+            auto arrows = arrowsRow.withSizeKeepingCentre (54, juce::jmin (arrowsRow.getHeight(), 18));
             shufPrev.setBounds (arrows.removeFromLeft (27));
             shufNext.setBounds (arrows);
         }

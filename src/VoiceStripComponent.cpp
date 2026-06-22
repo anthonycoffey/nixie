@@ -148,12 +148,13 @@ void VoiceStripComponent::resized()
     soloButton.setBounds (bottom.reduced (1));
     r.removeFromBottom (4);
 
-    // Shuffle: SHUF label, < > arrows side by side, LED readout below.
+    // Shuffle: SHUF label on top, LED readout, then < > arrows beneath it.
     auto shufArea = r.removeFromBottom (42);
     swingCaption.setBounds (shufArea.removeFromTop (11));
-    shufLed.setBounds (shufArea.removeFromBottom (13).reduced (2, 0));
+    auto shufArrows = shufArea.removeFromBottom (15);
+    shufLed.setBounds (shufArea.reduced (2, 0));
     {
-        auto arrows = shufArea.withSizeKeepingCentre (44, juce::jmin (shufArea.getHeight(), 16));
+        auto arrows = shufArrows.withSizeKeepingCentre (44, juce::jmin (shufArrows.getHeight(), 14));
         shufPrev.setBounds (arrows.removeFromLeft (22));
         shufNext.setBounds (arrows);
     }
