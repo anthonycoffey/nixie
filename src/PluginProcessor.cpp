@@ -31,8 +31,8 @@ LMOneAudioProcessor::LMOneAudioProcessor()
         voiceParams[(size_t) i].solo  = apvts.getRawParameterValue (id + "_solo");
     }
 
-    seqEnabledParam = apvts.getRawParameterValue ("seqEnabled");
-    seqTempoParam   = apvts.getRawParameterValue ("seqTempo");
+    seqTempoParam = apvts.getRawParameterValue ("seqTempo");
+    shuffleParam  = apvts.getRawParameterValue ("shuffle");
 
     // Seed a simple demo beat into slot 1 so the sequencer plays out of the box.
     {
@@ -70,12 +70,13 @@ LMOneAudioProcessor::createParameterLayout()
         NormalisableRange<float> (-12.0f, 12.0f, 0.01f), 0.0f));
 
     // Sequencer.
-    layout.add (std::make_unique<AudioParameterBool> (
-        ParameterID { "seqEnabled", 1 }, "Sequencer", true));
-
     layout.add (std::make_unique<AudioParameterFloat> (
         ParameterID { "seqTempo", 1 }, "Seq Tempo",
         NormalisableRange<float> (40.0f, 240.0f, 0.1f), 120.0f));
+
+    layout.add (std::make_unique<AudioParameterFloat> (
+        ParameterID { "shuffle", 1 }, "Shuffle",
+        NormalisableRange<float> (0.0f, 1.0f, 0.001f), 0.0f));
 
     // Per-channel mixer: level / pan / tune / mute / solo, generated in a loop.
     // (12 channels; the open-hat voice shares the Hi-Hat channel.)
@@ -287,9 +288,10 @@ void LMOneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     {
         Sequencer::Transport tr;
         tr.sampleRate      = currentSampleRate;
-        tr.seqEnabled      = seqEnabledParam->load() > 0.5f;
+        tr.seqEnabled      = true;   // runs whenever the transport (host or Play) is rolling
         tr.internalPlaying = internalPlaying.load();
         tr.internalBpm     = seqTempoParam->load();
+        tr.swing           = shuffleParam->load();
         if (auto* ph = getPlayHead())
             if (auto pos = ph->getPosition())
             {

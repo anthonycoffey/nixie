@@ -1,5 +1,14 @@
 #include "StepGridComponent.h"
 
+namespace
+{
+    // Grid row display order: closed hat (lane 2) then open hat (lane 12), then
+    // the rest — so the two hats sit next to each other even though the open hat
+    // is voice 12 internally.
+    constexpr int kRowToLane[13] = { 0, 1, 2, 12, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+    int laneForRow (int row) { return (row >= 0 && row < 13) ? kRowToLane[row] : row; }
+}
+
 StepGridComponent::StepGridComponent (LMOneAudioProcessor& p)
     : processor (p)
 {
@@ -31,7 +40,8 @@ StepGridComponent::Cell StepGridComponent::cellAt (juce::Point<int> pos) const
     const float cellW = (float) (getWidth() - kLabelW) / (float) numSteps;
     const int   laneH = juce::jmax (1, getHeight() / numLanes);
 
-    return { juce::jlimit (0, numLanes - 1, pos.y / laneH),
+    const int row = juce::jlimit (0, numLanes - 1, pos.y / laneH);
+    return { laneForRow (row),
              juce::jlimit (0, numSteps - 1, (int) ((float) (pos.x - kLabelW) / cellW)) };
 }
 
@@ -99,9 +109,10 @@ void StepGridComponent::paint (juce::Graphics& g)
 
     g.setFont (juce::FontOptions (11.0f));
 
-    for (int lane = 0; lane < numLanes; ++lane)
+    for (int row = 0; row < numLanes; ++row)
     {
-        const int y = lane * laneH;
+        const int lane = laneForRow (row);
+        const int y = row * laneH;
 
         if (lane < (int) pads.size())
         {

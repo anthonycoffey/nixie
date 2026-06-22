@@ -29,6 +29,7 @@ public:
         double internalBpm     = 120.0;
         double sampleRate      = 44100.0;
         bool   seqEnabled      = true;
+        double swing           = 0.0;   // 0..1 shuffle amount (delays odd 16ths)
     };
 
     void prepare (double newSampleRate) { sampleRate = newSampleRate; reset(); }
@@ -83,7 +84,7 @@ public:
         const int    numLanes     = juce::jlimit (1, Pattern::kMaxLanes, pattern.numLanes);
         const double stepPpq      = 0.25; // 16th note
         const double ppqPerSample = (bpm / 60.0 / juce::jmax (1.0, tr.sampleRate)) ;
-        const double swingPpq     = (double) juce::jlimit (0.0f, 0.9f, pattern.swing) * 0.5 * stepPpq;
+        const double swingPpq     = juce::jlimit (0.0, 0.9, tr.swing) * 0.5 * stepPpq;
 
         for (int i = 0; i < numSamples; ++i)
         {

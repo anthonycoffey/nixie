@@ -7,7 +7,7 @@ VoiceStripComponent::VoiceStripComponent (LMOneAudioProcessor& proc, int voiceIn
     midiNote = pad.midiNote;
 
     // Top: audition pad (click to play the voice without external MIDI).
-    padButton.setButtonText (pad.name);
+    padButton.setButtonText (processor.getChannelName (index));
     padButton.onClick = [this] { processor.keyboardState.noteOn (1, midiNote, 0.9f); };
     addAndMakeVisible (padButton);
 

@@ -41,20 +41,17 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
         addAndMakeVisible (lab);
     };
 
-    setupSlider (masterSlider, masterLabel, "Master");
-    setupSlider (lofiSlider,   lofiLabel,   "Lo-Fi");
-    setupSlider (tuneSlider,   tuneLabel,   "Tune");
+    setupSlider (masterSlider,  masterLabel,  "Master");
+    setupSlider (lofiSlider,    lofiLabel,    "Lo-Fi");
+    setupSlider (tuneSlider,    tuneLabel,    "Tune");
+    setupSlider (shuffleSlider, shuffleLabel, "Shuffle");
 
-    masterAttach = std::make_unique<SliderAttachment> (processor.apvts, "masterGain", masterSlider);
-    lofiAttach   = std::make_unique<SliderAttachment> (processor.apvts, "lofi",       lofiSlider);
-    tuneAttach   = std::make_unique<SliderAttachment> (processor.apvts, "tune",       tuneSlider);
+    masterAttach  = std::make_unique<SliderAttachment> (processor.apvts, "masterGain", masterSlider);
+    lofiAttach    = std::make_unique<SliderAttachment> (processor.apvts, "lofi",       lofiSlider);
+    tuneAttach    = std::make_unique<SliderAttachment> (processor.apvts, "tune",       tuneSlider);
+    shuffleAttach = std::make_unique<SliderAttachment> (processor.apvts, "shuffle",    shuffleSlider);
 
     // --- Transport bar -------------------------------------------------------
-    seqButton.setClickingTogglesState (true);
-    seqButton.setColour (juce::TextButton::buttonOnColourId, juce::Colours::seagreen);
-    addAndMakeVisible (seqButton);
-    seqAttach = std::make_unique<ButtonAttachment> (processor.apvts, "seqEnabled", seqButton);
-
     playButton.setClickingTogglesState (true);
     playButton.setColour (juce::TextButton::buttonOnColourId, juce::Colours::green);
     playButton.setToggleState (processor.isInternalPlaying(), juce::dontSendNotification);
@@ -339,9 +336,10 @@ void LMOneAudioProcessorEditor::resized()
             lab.setBounds (cell.removeFromTop (16));
             s.setBounds (cell);
         };
-        place (masterSlider, masterLabel);
-        place (lofiSlider,   lofiLabel);
-        place (tuneSlider,   tuneLabel);
+        place (masterSlider,  masterLabel);
+        place (lofiSlider,    lofiLabel);
+        place (tuneSlider,    tuneLabel);
+        place (shuffleSlider, shuffleLabel);
     }
 
     // SEQUENCER — transport controls + pattern slots + step grid, all together.
@@ -358,8 +356,6 @@ void LMOneAudioProcessorEditor::resized()
         trb.removeFromRight (12);
         stepLed.setBounds       (trb.removeFromRight (50));
         trb.removeFromRight (14);
-        seqButton.setBounds  (trb.removeFromLeft (50));
-        trb.removeFromLeft (8);
         playButton.setBounds (trb.removeFromLeft (56));
         trb.removeFromLeft (12);
         stepsLabel.setBounds (trb.removeFromLeft (44));

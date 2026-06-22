@@ -27,7 +27,7 @@ namespace LMOne
         { "Cowbell",     56, -1 },
         { "Clave",       75, -1 },
         { "Clap",        39, -1 },
-        { "Hi-Hat Open", 46,  0 },   // open hat — same choke group, shares the Hi-Hat fader
+        { "Open Hat",    46,  0 },   // open hat — same choke group, shares the Hi-Hat fader
     } };
 }
 

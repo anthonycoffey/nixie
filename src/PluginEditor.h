@@ -52,7 +52,6 @@ private:
     std::unique_ptr<juce::FileChooser> presetChooser;
 
     // Transport bar.
-    juce::TextButton seqButton  { "Seq" };
     juce::TextButton playButton { "Play" };
     juce::Slider     tempoSlider;
     juce::Label      tempoLabel;
@@ -62,13 +61,12 @@ private:
     juce::TextButton clearButton   { "Clear" };
     juce::TextButton optionsButton;            // gear: holds Export MIDI + future options
     std::unique_ptr<juce::FileChooser> midiChooser;
-    std::unique_ptr<ButtonAttachment> seqAttach;
     std::unique_ptr<SliderAttachment> tempoAttach;
 
-    juce::Slider masterSlider, lofiSlider, tuneSlider;
-    juce::Label  masterLabel,  lofiLabel,  tuneLabel;
+    juce::Slider masterSlider, lofiSlider, tuneSlider, shuffleSlider;
+    juce::Label  masterLabel,  lofiLabel,  tuneLabel,  shuffleLabel;
 
-    std::unique_ptr<SliderAttachment> masterAttach, lofiAttach, tuneAttach;
+    std::unique_ptr<SliderAttachment> masterAttach, lofiAttach, tuneAttach, shuffleAttach;
 
     // Styling: wood side cheeks + orange section frames.
     static constexpr int kCheek = 26;

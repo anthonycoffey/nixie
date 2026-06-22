@@ -63,6 +63,15 @@ public:
     // Exposed so the editor can label its pads.
     const std::vector<Pad>& getPads() const { return pads; }
 
+    // Mixer-strip label for a channel. The Hi-Hat channel is "Hi-hats" (it carries
+    // both the closed and open hat), so the 12-channel layout reads clearly.
+    juce::String getChannelName (int channel) const
+    {
+        if (channel == DrumKit::kHiHatChannel) return "Hi-hats";
+        return (channel >= 0 && channel < DrumKit::kNumVoices)
+                   ? juce::String (LMOne::kVoiceDefs[(size_t) channel].name) : juce::String();
+    }
+
     // Load a user WAV/AIFF into one voice (message thread). Copy-on-write swap;
     // a failed load leaves the existing sample in place. Returns success.
     bool loadUserSample (int voiceIndex, const juce::File& file);
@@ -161,8 +170,8 @@ private:
     int currentPattern = 0;
 
     std::atomic<bool>   internalPlaying { false };
-    std::atomic<float>* seqEnabledParam = nullptr;
-    std::atomic<float>* seqTempoParam   = nullptr;
+    std::atomic<float>* seqTempoParam = nullptr;
+    std::atomic<float>* shuffleParam  = nullptr;
 
     void    publishPattern (const Pattern& p);          // message thread
     Pattern getPatternSnapshot() const;                 // message thread
