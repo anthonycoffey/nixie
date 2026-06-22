@@ -23,7 +23,7 @@ void StepGridComponent::setPlayingStep (int step)
 StepGridComponent::Cell StepGridComponent::cellAt (juce::Point<int> pos) const
 {
     const int numSteps = juce::jmax (1, pattern.numSteps);
-    const int numLanes = juce::jmax (1, pattern.numLanes);
+    const int numLanes = juce::jmax (1, (int) processor.getPads().size());
 
     if (pos.x < kLabelW || pos.x >= getWidth() || pos.y < 0 || pos.y >= getHeight())
         return {};
@@ -91,7 +91,7 @@ void StepGridComponent::paint (juce::Graphics& g)
     g.fillAll (juce::Colour (0xff141417));
 
     const int numSteps = juce::jmax (1, pattern.numSteps);
-    const int numLanes = juce::jmax (1, pattern.numLanes);
+    const int numLanes = juce::jmax (1, (int) processor.getPads().size());
     const auto& pads   = processor.getPads();
 
     const int   laneH = getHeight() / numLanes;

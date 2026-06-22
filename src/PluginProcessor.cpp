@@ -485,6 +485,12 @@ void LMOneAudioProcessor::restoreStateTree (const juce::ValueTree& tree)
         patternBank[0].fromValueTree (pt);
         currentPattern = 0;
     }
+
+    // Lane count is fixed by the instrument, not by the saved pattern — keep every
+    // slot at the current voice count so older saves still show/fire all lanes.
+    for (auto& bp : patternBank)
+        bp.numLanes = DrumKit::kNumVoices;
+
     publishPattern (patternBank[(size_t) currentPattern]);
 
     sendChangeMessage(); // refresh the editor (grid + selector + sample labels)
