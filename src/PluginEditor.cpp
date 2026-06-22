@@ -52,17 +52,26 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
     shuffleAttach = std::make_unique<SliderAttachment> (processor.apvts, "shuffle",    shuffleSlider);
 
     // --- Transport bar -------------------------------------------------------
-    playButton.setClickingTogglesState (true);
-    playButton.setColour (juce::TextButton::buttonOnColourId, juce::Colours::green);
-    playButton.setToggleState (processor.isInternalPlaying(), juce::dontSendNotification);
-    playButton.setButtonText (processor.isInternalPlaying() ? "Stop" : "Play");
+    // PLAY toggles the internal clock; the lamp (not the label/colour) shows state.
     playButton.onClick = [this]
     {
-        const bool playing = playButton.getToggleState();
-        processor.setInternalPlaying (playing);
-        playButton.setButtonText (playing ? "Stop" : "Play");
+        const bool nowPlaying = ! processor.isInternalPlaying();
+        processor.setInternalPlaying (nowPlaying);
+        if (! nowPlaying)
+            processor.setRecordArmed (false);   // stopping the transport disarms record
     };
     addAndMakeVisible (playButton);
+
+    // REC arms recording and auto-starts the transport; turning it off leaves the
+    // sequencer rolling.
+    recButton.onClick = [this]
+    {
+        const bool arm = ! processor.isRecordArmed();
+        processor.setRecordArmed (arm);
+        if (arm)
+            processor.setInternalPlaying (true);
+    };
+    addAndMakeVisible (recButton);
 
     tempoLabel.setText ("Tempo", juce::dontSendNotification);
     tempoLabel.setJustificationType (juce::Justification::centredRight);
@@ -185,7 +194,7 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
     startTimerHz (20);                  // step readout + playhead
 
     const int stripW = 74;
-    setSize (stripW * DrumKit::kNumChannels + 20 + 2 * kCheek, 820 + kBottomLip);
+    setSize (stripW * DrumKit::kNumChannels + 20 + 2 * kCheek, 820 + kBottomLip + 12);
 }
 
 LMOneAudioProcessorEditor::~LMOneAudioProcessorEditor()
@@ -211,6 +220,12 @@ void LMOneAudioProcessorEditor::timerCallback()
     stepLed.setText (step < 0 ? juce::String ("--") : juce::String (step + 1));
     tempoLed.setText (juce::String (juce::roundToInt (processor.getSeqTempo())));
     grid.setPlayingStep (step);
+
+    playButton.setLedOn (step >= 0);                 // lit while the sequencer rolls
+    recButton.setLedOn (processor.isRecordArmed());
+
+    if (processor.pollRecordedNotes())               // drain live-recorded hits onto the grid
+        grid.reloadFromProcessor();
 }
 
 void LMOneAudioProcessorEditor::exportMidiToFile()
@@ -404,30 +419,32 @@ void LMOneAudioProcessorEditor::resized()
     }
 
     // SEQUENCER — transport controls + pattern slots + step grid, all together.
-    rSeq = area.removeFromBottom (kLabelStrip + 32 + 28 + 226);
+    rSeq = area.removeFromBottom (kLabelStrip + 44 + 28 + 226);
     {
         auto seq = rSeq;
         seq.removeFromTop (kLabelStrip);            // room for the section label
 
-        // Transport controls.
-        auto trb = seq.removeFromTop (32).reduced (8, 4);
+        // Transport controls (taller row to fit the LED-over-button transports).
+        auto trb = seq.removeFromTop (44).reduced (8, 4);
         midiDrag.setBounds      (trb.removeFromRight (100));
         trb.removeFromRight (6);
         optionsButton.setBounds (trb.removeFromRight (30));
         trb.removeFromRight (12);
         stepLed.setBounds       (trb.removeFromRight (50));
         trb.removeFromRight (14);
-        playButton.setBounds (trb.removeFromLeft (56));
-        trb.removeFromLeft (12);
-        stepsLabel.setBounds (trb.removeFromLeft (44));
-        stepsBox.setBounds   (trb.removeFromLeft (54));
+        playButton.setBounds (trb.removeFromLeft (52));
+        trb.removeFromLeft (6);
+        recButton.setBounds  (trb.removeFromLeft (52));
+        trb.removeFromLeft (14);
+        stepsLabel.setBounds (trb.removeFromLeft (40));
+        stepsBox.setBounds   (trb.removeFromLeft (52));
         trb.removeFromLeft (8);
-        clearButton.setBounds (trb.removeFromLeft (54));
+        clearButton.setBounds (trb.removeFromLeft (52));
         trb.removeFromLeft (12);
-        tempoLabel.setBounds (trb.removeFromLeft (50));
+        tempoLabel.setBounds (trb.removeFromLeft (46));
         tempoLed.setBounds (trb.removeFromRight (54).reduced (0, 2));
         trb.removeFromRight (6);
-        tempoSlider.setBounds (trb);
+        tempoSlider.setBounds (trb.removeFromLeft (trb.getWidth() / 2));   // half-width
 
         // Bank nav + 8 slot buttons + save.
         auto pr = seq.removeFromTop (28).reduced (8, 3);

@@ -8,6 +8,7 @@
 #include "PresetManager.h"
 #include "LMOneLookAndFeel.h"
 #include "LedDisplay.h"
+#include "TransportButton.h"
 
 //==============================================================================
 // Editor: a 12-channel voice mixer (one strip per LM-1 instrument) plus the
@@ -56,7 +57,8 @@ private:
     std::unique_ptr<juce::FileChooser> presetChooser;
 
     // Transport bar.
-    juce::TextButton playButton { "Play" };
+    TransportButton  playButton { "PLAY", juce::Colour (0xff37d067) };  // green = playing
+    TransportButton  recButton  { "REC",  juce::Colour (0xffe53935) };  // red   = recording
     juce::Slider     tempoSlider;
     juce::Label      tempoLabel;
     LedDisplay       stepLed { 2 }, tempoLed { 3 }, bankLed { 3 };

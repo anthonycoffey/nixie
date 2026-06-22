@@ -89,6 +89,13 @@ public:
     // Sequencer transport (for the editor).
     void setInternalPlaying (bool shouldPlay) noexcept { internalPlaying.store (shouldPlay); }
     bool isInternalPlaying() const noexcept            { return internalPlaying.load(); }
+
+    // Real-time record: while armed, incoming notes (MIDI + on-screen pads) are
+    // written onto the working pattern at the playing step. The audio thread
+    // queues hits lock-free; the editor drains them on the message thread.
+    void setRecordArmed (bool shouldRecord) noexcept { recordArmed.store (shouldRecord); }
+    bool isRecordArmed() const noexcept              { return recordArmed.load(); }
+    bool pollRecordedNotes();   // message thread — returns true if the pattern changed
     int  getCurrentStep() const noexcept               { return sequencer.getCurrentStepForUi(); }
     int  getNumSteps() const noexcept
     {
@@ -207,6 +214,14 @@ private:
     std::atomic<bool>   internalPlaying { false };
     std::atomic<float>* seqTempoParam = nullptr;
     std::atomic<float>* shuffleParam  = nullptr;
+
+    // Real-time record: audio thread queues hits, message thread applies them.
+    std::atomic<bool> recordArmed { false };
+    struct RecEvent { int lane; int step; juce::uint8 vel; };
+    static constexpr int kRecFifoSize = 256;
+    RecEvent recFifoBuf[kRecFifoSize];
+    juce::AbstractFifo recFifo { kRecFifoSize };
+    void pushRecordEvent (int lane, int step, juce::uint8 vel) noexcept; // audio thread
 
     void publishPattern (const Pattern& p);             // message thread
 
