@@ -43,7 +43,7 @@ public:
             // "load" — a folder glyph, drawn directly (not fitted), so it shows at
             // full size or not at all — never truncated to "...".
             g.setColour (juce::Colours::white.withAlpha (0.9f));
-            g.setFont (juce::FontOptions (15.0f));
+            g.setFont (juce::FontOptions (14.0f));
             g.drawText (juce::String::fromUTF8 ("\xF0\x9F\x93\x81"),   // U+1F4C1 file folder
                         getLocalBounds(), juce::Justification::centred);
         }
