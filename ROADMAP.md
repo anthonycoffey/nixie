@@ -139,27 +139,34 @@ settings persist across reopen.
 
 **Done when:** dragging the handle drops a correctly-timed, playable MIDI clip in the DAW.
 
-### ⬜ Stage F — Patterns, presets & persistence
+### ✅ Stage F — Patterns, presets & persistence _(done)_
 
-**Goal:** make it usable for real songs and reopen intact.
+- 8 in-project pattern slots (being superseded by the bank library, Stage I).
+- Kit (sample sources + trim) + mixer + patterns serialize into plugin state.
+- `PresetManager`: save/load full state tree as `.lm1preset` via the gear menu.
 
-- Multiple pattern slots (modern A/B switching).
-- Serialize patterns + kit (sample sources + trim) + mixer into the plugin state.
-- `PresetManager`: factory + user presets (full state tree as `.preset`), with **path-by-
-  default and an opt-in "Export Portable Preset"** that embeds custom WAVs.
+### ✅ Stage G — Character & styling _(done)_
 
-**Done when:** save a project (and a preset), reopen → everything exactly as left; a portable
-preset survives moving the original WAV.
+Wood side cheeks, black faceplate with `#fc5824` section frames + labels, custom
+vintage knobs/faders/buttons, red 7-segment LEDs (Step/Tempo/Pattern), open/closed
+hi-hat, and a **Shuffle** swing control.
 
-### ⬜ Stage G — Character & light styling _(charm — lower priority)_
+### 🔨 Stage I — Pattern banks & preset library _(building next)_
 
-**Goal:** make it _feel_ like an LM-1 without sinking time into faithful hardware chrome.
+**Goal:** a browsable groove library on the panel — the LM-1's pattern-select, scaled up.
 
-- Tasteful LM-1-inspired faceplate/typography (not a literal keypad/LED recreation).
-- Refine the lo-fi stage toward the AM6070 (8-bit + μ-law companding); per-voice option.
-- Per-voice decay/length + reverse; true open/closed hi-hat articulation; optional swing.
+- **Model:** 100 banks × 8 slots = 800 preset slots. A **Bank** LED (1–100) with
+  prev/next; the 8 slot buttons load the selected bank's slot into the working
+  sequence (and set its tempo). Replaces the in-project A/B pattern slots.
+- **Preloaded:** banks 1–10 ship with **80 factory grooves** generated across styles
+  + tempos (rock, funk, hip-hop, house, disco, latin, pop, electro, breakbeat, ballad).
 
-**Done when:** it reads as an LM-1 and A/Bs in the ballpark of reference recordings.
+**Deferred (per request — noted here):**
+- **Full-state presets:** slots load pattern + tempo only; capturing mixer/kit/tuning
+  per slot is deferred (the gear-menu `.lm1preset` files already save the whole setup).
+- **User save-to-slot + persistence** for banks 11–100 (user-writable library).
+
+**Done when:** sweep banks, tap a slot, and a styled groove drops into the grid in time.
 
 ### ⬜ Stage H — Robustness & distribution
 

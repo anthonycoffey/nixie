@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "FactoryGrooves.h"
 
 //==============================================================================
 LMOneAudioProcessor::LMOneAudioProcessor()
@@ -34,17 +35,14 @@ LMOneAudioProcessor::LMOneAudioProcessor()
     seqTempoParam = apvts.getRawParameterValue ("seqTempo");
     shuffleParam  = apvts.getRawParameterValue ("shuffle");
 
-    // Seed a simple demo beat into slot 1 so the sequencer plays out of the box.
-    {
-        Pattern& p = patternBank[0];
-        p.numSteps = 16;
-        p.numLanes = DrumKit::kNumVoices;
-        for (int s = 0; s < 16; s += 4) p.setStep (0, s, 110);  // Bass: four-on-the-floor
-        p.setStep (1, 4, 100);  p.setStep (1, 12, 100);         // Snare: backbeat
-        for (int s = 0; s < 16; s += 2) p.setStep (2, s, 80);   // Hi-Hat: eighths
-    }
-    currentPattern = 0;
-    publishPattern (patternBank[0]);
+    // Preset library: factory banks 1-5 + any user-saved banks. Start on the
+    // first factory groove so the sequencer plays something out of the box.
+    loadFactoryLibrary();
+    loadUserLibrary();
+    currentBank     = 0;
+    workingPattern  = library[0][0].pattern;   // "Basic Rock"
+    workingPattern.numLanes = DrumKit::kNumVoices;
+    publishPattern (workingPattern);
 
     // Build the default kit and publish it to the audio thread.
     setKit (KitFactory::buildFactoryKit());
@@ -177,42 +175,151 @@ void LMOneAudioProcessor::publishPattern (const Pattern& p)
     patternState.live.store (next, std::memory_order_release);
 }
 
-Pattern LMOneAudioProcessor::getPatternSnapshot() const
-{
-    return patternState.slots[(size_t) patternState.live.load (std::memory_order_acquire)];
-}
-
-void LMOneAudioProcessor::selectPattern (int index)
-{
-    if (index < 0 || index >= kNumPatterns || index == currentPattern)
-        return;
-
-    currentPattern = index;
-    publishPattern (patternBank[(size_t) index]);
-}
-
 void LMOneAudioProcessor::setStep (int lane, int step, juce::uint8 velocity)
 {
     if (lane < 0 || lane >= Pattern::kMaxLanes || step < 0 || step >= Pattern::kMaxSteps)
         return;
 
-    auto& p = patternBank[(size_t) currentPattern];
-    p.vel[(size_t) lane][(size_t) step] = velocity;
-    publishPattern (p);
+    workingPattern.vel[(size_t) lane][(size_t) step] = velocity;
+    publishPattern (workingPattern);
 }
 
 void LMOneAudioProcessor::setPatternLength (int numSteps)
 {
-    auto& p = patternBank[(size_t) currentPattern];
-    p.numSteps = juce::jlimit (1, Pattern::kMaxSteps, numSteps);
-    publishPattern (p);
+    workingPattern.numSteps = juce::jlimit (1, Pattern::kMaxSteps, numSteps);
+    publishPattern (workingPattern);
 }
 
 void LMOneAudioProcessor::clearPattern()
 {
-    auto& p = patternBank[(size_t) currentPattern];
-    p.clear();
-    publishPattern (p);
+    const int keepSteps = workingPattern.numSteps;
+    workingPattern.clear();
+    workingPattern.numSteps = keepSteps;
+    workingPattern.numLanes = DrumKit::kNumVoices;
+    publishPattern (workingPattern);
+}
+
+//==============================================================================
+void LMOneAudioProcessor::setCurrentBank (int bank)
+{
+    currentBank = juce::jlimit (0, kNumBanks - 1, bank);
+}
+
+void LMOneAudioProcessor::loadSlot (int slot)
+{
+    if (slot < 0 || slot >= kBankSlots) return;
+
+    const auto& s = library[(size_t) currentBank][(size_t) slot];
+    if (! s.filled) return;
+
+    workingPattern = s.pattern;
+    workingPattern.numLanes = DrumKit::kNumVoices;
+    publishPattern (workingPattern);
+
+    if (auto* p = apvts.getParameter ("seqTempo"))
+        p->setValueNotifyingHost (p->convertTo0to1 ((float) s.tempo));
+}
+
+void LMOneAudioProcessor::saveSlot (int slot)
+{
+    if (slot < 0 || slot >= kBankSlots || currentBank < kNumFactoryBanks)
+        return;   // factory banks are read-only
+
+    auto& s = library[(size_t) currentBank][(size_t) slot];
+    s.pattern = workingPattern;
+    s.tempo   = juce::roundToInt (getSeqTempo());
+    s.factory = false;
+    s.filled  = true;
+    if (s.name.isEmpty())
+        s.name = "User " + juce::String (currentBank + 1) + "." + juce::String (slot + 1);
+
+    saveUserLibrary();
+}
+
+bool LMOneAudioProcessor::slotFilled (int slot) const
+{
+    return slot >= 0 && slot < kBankSlots && library[(size_t) currentBank][(size_t) slot].filled;
+}
+
+juce::String LMOneAudioProcessor::slotName (int slot) const
+{
+    return (slot >= 0 && slot < kBankSlots) ? library[(size_t) currentBank][(size_t) slot].name
+                                            : juce::String();
+}
+
+//==============================================================================
+void LMOneAudioProcessor::loadFactoryLibrary()
+{
+    const auto banks = FactoryGrooves::build();   // 5 banks x 8
+    for (int bk = 0; bk < (int) banks.size() && bk < kNumBanks; ++bk)
+        for (int sl = 0; sl < (int) banks[(size_t) bk].size() && sl < kBankSlots; ++sl)
+        {
+            auto& dst = library[(size_t) bk][(size_t) sl];
+            dst.pattern = banks[(size_t) bk][(size_t) sl].pattern;
+            dst.tempo   = banks[(size_t) bk][(size_t) sl].tempo;
+            dst.name    = banks[(size_t) bk][(size_t) sl].name;
+            dst.filled  = true;
+            dst.factory = true;
+        }
+}
+
+juce::File LMOneAudioProcessor::userLibraryFile()
+{
+    auto dir = juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory)
+                   .getChildFile ("LM-1");
+    dir.createDirectory();
+    return dir.getChildFile ("UserBanks.xml");
+}
+
+void LMOneAudioProcessor::loadUserLibrary()
+{
+    const auto f = userLibraryFile();
+    if (! f.existsAsFile()) return;
+
+    auto xml = juce::XmlDocument::parse (f);
+    if (xml == nullptr) return;
+
+    auto root = juce::ValueTree::fromXml (*xml);
+    if (! root.hasType ("USERBANKS")) return;
+
+    for (const auto& v : root)
+    {
+        const int bk = (int) v.getProperty ("bank", -1);
+        const int sl = (int) v.getProperty ("slot", -1);
+        if (bk < kNumFactoryBanks || bk >= kNumBanks || sl < 0 || sl >= kBankSlots)
+            continue;
+
+        auto& s = library[(size_t) bk][(size_t) sl];
+        s.tempo = (int) v.getProperty ("tempo", 120);
+        s.name  = v.getProperty ("name", "").toString();
+        if (auto pt = v.getChildWithName ("PATTERN"); pt.isValid())
+            s.pattern.fromValueTree (pt);
+        s.pattern.numLanes = DrumKit::kNumVoices;
+        s.filled  = true;
+        s.factory = false;
+    }
+}
+
+void LMOneAudioProcessor::saveUserLibrary() const
+{
+    juce::ValueTree root ("USERBANKS");
+    for (int bk = kNumFactoryBanks; bk < kNumBanks; ++bk)
+        for (int sl = 0; sl < kBankSlots; ++sl)
+        {
+            const auto& s = library[(size_t) bk][(size_t) sl];
+            if (! s.filled) continue;
+
+            juce::ValueTree v ("SLOT");
+            v.setProperty ("bank",  bk,      nullptr);
+            v.setProperty ("slot",  sl,      nullptr);
+            v.setProperty ("tempo", s.tempo, nullptr);
+            v.setProperty ("name",  s.name,  nullptr);
+            v.appendChild (s.pattern.toValueTree(), nullptr);
+            root.appendChild (v, nullptr);
+        }
+
+    if (auto xml = root.createXml())
+        xml->writeTo (userLibraryFile());
 }
 
 bool LMOneAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -418,16 +525,8 @@ juce::ValueTree LMOneAudioProcessor::captureStateTree()
     }
     state.appendChild (kit, nullptr);
 
-    // Pattern bank (all slots + which one is current).
-    juce::ValueTree patterns ("PATTERNS");
-    patterns.setProperty ("current", currentPattern, nullptr);
-    for (int i = 0; i < kNumPatterns; ++i)
-    {
-        auto pv = patternBank[(size_t) i].toValueTree();   // type "PATTERN"
-        pv.setProperty ("slot", i, nullptr);
-        patterns.appendChild (pv, nullptr);
-    }
-    state.appendChild (patterns, nullptr);
+    // Working sequence.
+    state.appendChild (workingPattern.toValueTree(), nullptr);   // type "PATTERN"
 
     return state;
 }
@@ -471,31 +570,23 @@ void LMOneAudioProcessor::restoreStateTree (const juce::ValueTree& tree)
         setKit (next);
     }
 
-    // Restore the pattern bank (with a legacy single-PATTERN fallback).
-    if (auto pts = tree.getChildWithName ("PATTERNS"); pts.isValid())
+    // Restore the working sequence (legacy bank format: take its current slot).
+    if (auto pt = tree.getChildWithName ("PATTERN"); pt.isValid())
     {
+        workingPattern.fromValueTree (pt);
+    }
+    else if (auto pts = tree.getChildWithName ("PATTERNS"); pts.isValid())
+    {
+        const int cur = juce::jlimit (0, kBankSlots - 1, (int) pts.getProperty ("current", 0));
         for (const auto& pv : pts)
-        {
-            const int slot = (int) pv.getProperty ("slot", -1);
-            if (slot >= 0 && slot < kNumPatterns)
-                patternBank[(size_t) slot].fromValueTree (pv);
-        }
-        currentPattern = juce::jlimit (0, kNumPatterns - 1, (int) pts.getProperty ("current", 0));
-    }
-    else if (auto pt = tree.getChildWithName ("PATTERN"); pt.isValid())
-    {
-        patternBank[0].fromValueTree (pt);
-        currentPattern = 0;
+            if ((int) pv.getProperty ("slot", -1) == cur) { workingPattern.fromValueTree (pv); break; }
     }
 
-    // Lane count is fixed by the instrument, not by the saved pattern — keep every
-    // slot at the current voice count so older saves still show/fire all lanes.
-    for (auto& bp : patternBank)
-        bp.numLanes = DrumKit::kNumVoices;
+    // Lane count is fixed by the instrument, not by the saved pattern.
+    workingPattern.numLanes = DrumKit::kNumVoices;
+    publishPattern (workingPattern);
 
-    publishPattern (patternBank[(size_t) currentPattern]);
-
-    sendChangeMessage(); // refresh the editor (grid + selector + sample labels)
+    sendChangeMessage(); // refresh the editor (grid + sample labels) after a restore
 }
 
 void LMOneAudioProcessor::setStateInformation (const void* data, int sizeInBytes)

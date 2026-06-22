@@ -129,22 +129,41 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
     };
     addAndMakeVisible (optionsButton);
 
-    // Pattern bank selector (radio group).
-    patternLabel.setText ("Pat", juce::dontSendNotification);
-    patternLabel.setJustificationType (juce::Justification::centredRight);
-    addAndMakeVisible (patternLabel);
-    addAndMakeVisible (patternLed);
-    for (int i = 0; i < processor.getNumPatterns(); ++i)
+    // Preset library: Bank LED + prev/next, 8 slot buttons, Save.
+    bankLabel.setText ("Bank", juce::dontSendNotification);
+    bankLabel.setJustificationType (juce::Justification::centredRight);
+    addAndMakeVisible (bankLabel);
+    addAndMakeVisible (bankLed);
+
+    bankPrev.setButtonText (juce::String::fromUTF8 ("\xE2\x97\x80")); // left triangle
+    bankNext.setButtonText (juce::String::fromUTF8 ("\xE2\x96\xB6")); // right triangle
+    bankPrev.onClick = [this] { processor.setCurrentBank (processor.getCurrentBank() - 1); refreshBankUI(); };
+    bankNext.onClick = [this] { processor.setCurrentBank (processor.getCurrentBank() + 1); refreshBankUI(); };
+    addAndMakeVisible (bankPrev);
+    addAndMakeVisible (bankNext);
+
+    for (int i = 0; i < LMOneAudioProcessor::kBankSlots; ++i)
     {
         auto* b = new juce::TextButton (juce::String (i + 1));
-        b->setClickingTogglesState (true);
-        b->setRadioGroupId (1001);
         b->setColour (juce::TextButton::buttonOnColourId, juce::Colours::orange);
-        b->onClick = [this, i] { processor.selectPattern (i); grid.reloadFromProcessor(); };
+        b->onClick = [this, i]
+        {
+            selectedSlot = i;
+            if (processor.slotFilled (i))
+            {
+                processor.loadSlot (i);
+                grid.reloadFromProcessor();
+            }
+            refreshBankUI();
+        };
         addAndMakeVisible (b);
-        patternButtons.add (b);
+        slotButtons.add (b);
     }
-    updatePatternButtons();
+
+    saveButton.onClick = [this] { processor.saveSlot (selectedSlot); refreshBankUI(); };
+    addAndMakeVisible (saveButton);
+
+    refreshBankUI();
 
     addAndMakeVisible (grid);
     addAndMakeVisible (midiDrag);
@@ -170,7 +189,7 @@ void LMOneAudioProcessorEditor::changeListenerCallback (juce::ChangeBroadcaster*
 
     grid.reloadFromProcessor();
     stepsBox.setSelectedId (processor.getNumSteps(), juce::dontSendNotification);
-    updatePatternButtons();
+    refreshBankUI();
 }
 
 void LMOneAudioProcessorEditor::timerCallback()
@@ -206,12 +225,18 @@ void LMOneAudioProcessorEditor::exportMidiToFile()
         });
 }
 
-void LMOneAudioProcessorEditor::updatePatternButtons()
+void LMOneAudioProcessorEditor::refreshBankUI()
 {
-    const int cur = processor.getCurrentPattern();
-    for (int i = 0; i < patternButtons.size(); ++i)
-        patternButtons[i]->setToggleState (i == cur, juce::dontSendNotification);
-    patternLed.setText (juce::String (cur + 1));
+    bankLed.setText (juce::String (processor.getCurrentBank() + 1));
+    for (int i = 0; i < slotButtons.size(); ++i)
+    {
+        const bool filled = processor.slotFilled (i);
+        slotButtons[i]->setToggleState (i == selectedSlot, juce::dontSendNotification);
+        slotButtons[i]->setColour (juce::TextButton::buttonColourId,
+                                   filled ? juce::Colour (0xff2c2926) : juce::Colour (0xff191817));
+        slotButtons[i]->setTooltip (filled ? processor.slotName (i) : juce::String ("(empty)"));
+    }
+    saveButton.setEnabled (! processor.currentBankIsFactory());
 }
 
 void LMOneAudioProcessorEditor::savePresetDialog()
@@ -368,17 +393,21 @@ void LMOneAudioProcessorEditor::resized()
         trb.removeFromRight (6);
         tempoSlider.setBounds (trb);
 
-        // Pattern slots.
+        // Bank nav + 8 slot buttons + save.
         auto pr = seq.removeFromTop (28).reduced (8, 3);
-        patternLabel.setBounds (pr.removeFromLeft (32));
-        patternLed.setBounds (pr.removeFromLeft (24).reduced (0, 1));
-        pr.removeFromLeft (8);
-        const int nb = patternButtons.size();
+        bankLabel.setBounds (pr.removeFromLeft (34));
+        bankPrev.setBounds  (pr.removeFromLeft (22));
+        bankLed.setBounds   (pr.removeFromLeft (42).reduced (0, 1));
+        bankNext.setBounds  (pr.removeFromLeft (22));
+        pr.removeFromLeft (10);
+        saveButton.setBounds (pr.removeFromRight (52));
+        pr.removeFromRight (10);
+        const int nb = slotButtons.size();
         if (nb > 0)
         {
-            const int bw = juce::jmin (44, pr.getWidth() / nb);
+            const int bw = juce::jmin (48, pr.getWidth() / nb);
             for (int i = 0; i < nb; ++i)
-                patternButtons[i]->setBounds (pr.removeFromLeft (bw).reduced (1, 0));
+                slotButtons[i]->setBounds (pr.removeFromLeft (bw).reduced (1, 0));
         }
 
         // Step grid fills the rest.

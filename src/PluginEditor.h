@@ -35,7 +35,7 @@ private:
     void exportMidiToFile();      // invoked from the options menu
     void savePresetDialog();
     void loadPresetDialog();
-    void updatePatternButtons();  // reflect the active pattern slot
+    void refreshBankUI();         // reflect the current bank + slot states
 
     LMOneAudioProcessor& processor;
     LMOneLookAndFeel     lookAndFeel;
@@ -46,16 +46,18 @@ private:
     StepGridComponent grid;
     MidiDragSource    midiDrag;
 
-    // Pattern bank selector.
-    juce::OwnedArray<juce::TextButton> patternButtons;
-    juce::Label patternLabel;
+    // Preset library: bank nav + 8 slot buttons + save.
+    juce::OwnedArray<juce::TextButton> slotButtons;
+    juce::Label      bankLabel;
+    juce::TextButton bankPrev, bankNext, saveButton { "Save" };
+    int              selectedSlot = 0;
     std::unique_ptr<juce::FileChooser> presetChooser;
 
     // Transport bar.
     juce::TextButton playButton { "Play" };
     juce::Slider     tempoSlider;
     juce::Label      tempoLabel;
-    LedDisplay       stepLed { 2 }, tempoLed { 3 }, patternLed { 1 };
+    LedDisplay       stepLed { 2 }, tempoLed { 3 }, bankLed { 3 };
     juce::ComboBox   stepsBox;
     juce::Label      stepsLabel;
     juce::TextButton clearButton   { "Clear" };

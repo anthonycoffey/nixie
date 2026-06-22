@@ -89,17 +89,26 @@ public:
         return patternState.slots[(size_t) patternState.live.load (std::memory_order_acquire)].numSteps;
     }
 
-    // Pattern access + editing (message thread). Edits modify the current bank
-    // slot, then publish it to the audio thread.
-    static constexpr int kNumPatterns = 8;
-    Pattern getPattern() const { return patternBank[(size_t) currentPattern]; }
-    int     getNumPatterns() const noexcept { return kNumPatterns; }
-    int     getCurrentPattern() const noexcept { return currentPattern; }
-    void    selectPattern (int index);
+    // Working sequence (single, edited in the grid). Edits publish to the audio thread.
+    Pattern getPattern() const { return workingPattern; }
     void    setStep (int lane, int step, juce::uint8 velocity);
     void    setPatternLength (int numSteps);
     void    clearPattern();
     float   getSeqTempo() const noexcept { return seqTempoParam != nullptr ? seqTempoParam->load() : 120.0f; }
+
+    // Preset library: 100 banks x 8 slots. Banks 1-5 are factory grooves; banks
+    // 6-100 are user-saveable (persisted to disk). The editor works with the
+    // "current bank"; slots load into / save from the working sequence.
+    static constexpr int kNumBanks        = 100;
+    static constexpr int kBankSlots       = 8;
+    static constexpr int kNumFactoryBanks = 5;
+    int  getCurrentBank() const noexcept { return currentBank; }
+    void setCurrentBank (int bank);
+    void loadSlot (int slot);                  // current bank -> working sequence (+ tempo)
+    void saveSlot (int slot);                  // working sequence -> current bank (user banks only)
+    bool slotFilled (int slot) const;          // is a slot in the current bank populated?
+    juce::String slotName (int slot) const;    // name of a slot in the current bank
+    bool currentBankIsFactory() const noexcept { return currentBank < kNumFactoryBanks; }
 
     // Full state capture/restore — shared by host state and the preset manager.
     juce::ValueTree captureStateTree();
@@ -164,17 +173,32 @@ private:
     PatternState patternState;
     Sequencer    sequencer;
 
-    // Canonical pattern bank (message thread). The live slot of patternState is a
-    // copy of patternBank[currentPattern] that the audio thread reads.
-    std::array<Pattern, (size_t) kNumPatterns> patternBank;
-    int currentPattern = 0;
+    // The single working sequence (message-thread canonical). The live slot of
+    // patternState is a copy that the audio thread reads.
+    Pattern workingPattern;
+
+    // Preset library (message thread). Banks 0..4 factory, 5..99 user-saveable.
+    struct PresetSlot
+    {
+        Pattern      pattern;
+        int          tempo   = 120;
+        bool         filled  = false;
+        bool         factory = false;
+        juce::String name;
+    };
+    std::array<std::array<PresetSlot, (size_t) kBankSlots>, (size_t) kNumBanks> library;
+    int currentBank = 0;
+
+    void loadFactoryLibrary();
+    void loadUserLibrary();
+    void saveUserLibrary() const;
+    static juce::File userLibraryFile();
 
     std::atomic<bool>   internalPlaying { false };
     std::atomic<float>* seqTempoParam = nullptr;
     std::atomic<float>* shuffleParam  = nullptr;
 
-    void    publishPattern (const Pattern& p);          // message thread
-    Pattern getPatternSnapshot() const;                 // message thread
+    void publishPattern (const Pattern& p);             // message thread
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LMOneAudioProcessor)
 };
