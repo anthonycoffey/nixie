@@ -73,7 +73,7 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
     };
     addAndMakeVisible (recButton);
 
-    tempoLabel.setText ("Tempo", juce::dontSendNotification);
+    tempoLabel.setText ("TEMPO", juce::dontSendNotification);
     tempoLabel.setJustificationType (juce::Justification::centredRight);
     addAndMakeVisible (tempoLabel);
 
@@ -85,7 +85,7 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
     addAndMakeVisible (stepLed);
     addAndMakeVisible (tempoLed);
 
-    stepsLabel.setText ("Steps", juce::dontSendNotification);
+    stepsLabel.setText ("STEPS", juce::dontSendNotification);
     stepsLabel.setJustificationType (juce::Justification::centredRight);
     addAndMakeVisible (stepsLabel);
 
@@ -154,7 +154,7 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
     addAndMakeVisible (optionsButton);
 
     // Preset library: Bank LED + prev/next, 8 slot buttons, Save.
-    bankLabel.setText ("Bank", juce::dontSendNotification);
+    bankLabel.setText ("BANK", juce::dontSendNotification);
     bankLabel.setJustificationType (juce::Justification::centredRight);
     addAndMakeVisible (bankLabel);
     addAndMakeVisible (bankLed);
@@ -436,8 +436,8 @@ void LMOneAudioProcessorEditor::resized()
         trb.removeFromLeft (6);
         recButton.setBounds  (trb.removeFromLeft (52));
         trb.removeFromLeft (14);
-        stepsLabel.setBounds (trb.removeFromLeft (40));
-        stepsBox.setBounds   (trb.removeFromLeft (52));
+        stepsLabel.setBounds (trb.removeFromLeft (46));
+        stepsBox.setBounds   (trb.removeFromLeft (72));
         trb.removeFromLeft (8);
         clearButton.setBounds (trb.removeFromLeft (52));
         trb.removeFromLeft (12);
@@ -448,7 +448,7 @@ void LMOneAudioProcessorEditor::resized()
 
         // Bank nav + 8 slot buttons + save.
         auto pr = seq.removeFromTop (28).reduced (8, 3);
-        bankLabel.setBounds (pr.removeFromLeft (34));
+        bankLabel.setBounds (pr.removeFromLeft (42));
         bankPrev.setBounds  (pr.removeFromLeft (22));
         bankLed.setBounds   (pr.removeFromLeft (42).reduced (0, 1));
         bankNext.setBounds  (pr.removeFromLeft (22));
