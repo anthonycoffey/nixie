@@ -204,6 +204,42 @@ void LMOneAudioProcessor::publishPattern (const Pattern& p)
     patternState.live.store (next, std::memory_order_release);
 }
 
+void LMOneAudioProcessor::pushRecordEvent (int lane, int step, juce::uint8 vel) noexcept
+{
+    int start1, size1, start2, size2;
+    recFifo.prepareToWrite (1, start1, size1, start2, size2);
+    if (size1 > 0)      recFifoBuf[(size_t) start1] = { lane, step, vel };
+    else if (size2 > 0) recFifoBuf[(size_t) start2] = { lane, step, vel };
+    recFifo.finishedWrite (size1 + size2);
+}
+
+bool LMOneAudioProcessor::pollRecordedNotes()
+{
+    const int ready = recFifo.getNumReady();
+    if (ready <= 0)
+        return false;
+
+    int start1, size1, start2, size2;
+    recFifo.prepareToRead (ready, start1, size1, start2, size2);
+
+    auto apply = [this] (int start, int count)
+    {
+        for (int i = 0; i < count; ++i)
+        {
+            const auto& e = recFifoBuf[(size_t) (start + i)];
+            if (e.lane >= 0 && e.lane < Pattern::kMaxLanes
+                && e.step >= 0 && e.step < Pattern::kMaxSteps)
+                workingPattern.vel[(size_t) e.lane][(size_t) e.step] = e.vel;  // overdub
+        }
+    };
+    apply (start1, size1);
+    apply (start2, size2);
+    recFifo.finishedRead (size1 + size2);
+
+    publishPattern (workingPattern);
+    return true;
+}
+
 void LMOneAudioProcessor::setStep (int lane, int step, juce::uint8 velocity)
 {
     if (lane < 0 || lane >= Pattern::kMaxLanes || step < 0 || step >= Pattern::kMaxSteps)
@@ -418,14 +454,21 @@ void LMOneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             events[(size_t) numEvents++] = { v, juce::jlimit (0, juce::jmax (0, n - 1), off), vel };
     };
 
-    // Live MIDI note-ons, at their sample positions.
+    // Live MIDI note-ons, at their sample positions. When record is armed and the
+    // sequencer is rolling, also write the hit onto the playing step (overdub).
+    const int recStep = recordArmed.load() ? sequencer.getCurrentStepForUi() : -1;
     for (const auto metadata : midiMessages)
     {
         const auto msg = metadata.getMessage();
         if (msg.isNoteOn())
             for (int p = 0; p < (int) pads.size(); ++p)
                 if (pads[(size_t) p].midiNote == msg.getNoteNumber())
+                {
                     addEvent (p, metadata.samplePosition, msg.getFloatVelocity());
+                    if (recStep >= 0)
+                        pushRecordEvent (p, recStep,
+                            (juce::uint8) juce::jlimit (1, 127, juce::roundToInt (msg.getFloatVelocity() * 127.0f)));
+                }
     }
 
     // Sequencer steps.
