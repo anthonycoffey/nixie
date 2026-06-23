@@ -107,7 +107,7 @@ namespace FactoryGrooves
         b[3][4] = { "90s R&B",     "R&B",     92, makeGroove (4,4,R16, { {BASS,"x..x..x...x..x.."},{SNR,"....x.......x..."},{CLP,"....x.......x..."},{HAT,"xxxxxxxxxxxxxxxx"} }) };
         b[3][5] = { "Gospel",      "Gospel", 100, makeGroove (12,8,R8, { {BASS,"x.....x....."},{SNR,"...x.....x.."},{HAT,"x.xx.xx.xx.x"},{TMB,"...x.....x.."} }) };
         b[3][6] = { "Praise Break","Gospel", 140, makeGroove (4,4,R16, { {BASS,"x..x..x...x..x.."},{SNR,"....x..x....x..x"},{HAT,"x.x.x.x.x.x.x.x."} }) };
-        b[3][7] = { "Shout",       "Gospel", 144, makeGroove (4,4,R16, { {BASS,"x...x...x...x..."},{SNR,"....x..x....x.xx"},{HAT,"x.x.x.x.x.x.x.x."} }) };
+        b[3][7] = { "Shout",       "Gospel", 152, makeGroove (12,8,R8, { {BASS,"x..x..x..x.."},{SNR,"...x.....x.."},{HAT,"x.xx.xx.xx.x"} }) };
         b[3][8] = { "Gospel Ballad","Gospel", 68, makeGroove (12,8,R8, { {BASS,"x.....x....."},{SNR,"...x.....x.."},{HAT,"x..x..x..x.."} }) };
         b[3][9] = { "Two-Beat",    "Gospel", 100, makeGroove (2,4,R16, { {BASS,"x...x..."},{SNR,"....X..."},{TMB,"x.x.x.x."} }) };
 
@@ -136,16 +136,16 @@ namespace FactoryGrooves
         b[5][9] = { "Head Nod",    "Neo-Soul", 80, makeGroove (4,4,R16, { {BASS,"x.......x.x....."},{SNR,"....x.......x..."},{HAT,"x.x.x.x.x.x.x.x."} }) };
 
         // === Bank 7: REGGAE / LATIN ==============================================
-        b[6][0] = { "One Drop",    "Reggae", 72, makeGroove (4,4,R16, { {BASS,"........x......."},{SNR,"........x......."},{HAT,"..x...x...x...x."} }) };
-        b[6][1] = { "Steppers",    "Reggae", 76, makeGroove (4,4,R16, { {BASS,"x...x...x...x..."},{SNR,"........x......."},{HAT,"..x...x...x...x."} }) };
-        b[6][2] = { "Rockers",     "Reggae", 78, makeGroove (4,4,R16, { {BASS,"x.......x......."},{SNR,"........x......."},{HAT,"..x...x...x...x."},{TMB,"..x...x...x...x."} }) };
-        b[6][3] = { "Dancehall",   "Reggae", 94, makeGroove (4,4,R16, { {BASS,"x.....x.x......."},{SNR,"........x......."},{HAT,"x.x.x.x.x.x.x.x."} }) };
-        b[6][4] = { "Dub",         "Reggae", 70, makeGroove (4,4,R16, { {BASS,"........x......."},{SNR,"....o...x......."},{OHH,"..x...x...x...x."},{CLP,"............x..."} }) };
-        b[6][5] = { "Bossa Nova",  "Latin", 130, makeGroove (4,4,R16, { {BASS,"x.....x.x.....x."},{CLV,"x..x..x.x..x..x."},{CGH,"..x...x...x...x."} }) };
-        b[6][6] = { "Songo",       "Latin", 104, makeGroove (4,4,R16, { {BASS,"x..x..x...x..x.."},{CGL,"x..x..x...x..x.."},{CGH,"..x.x...x.x...x."},{COW,"x...x...x...x..."} }) };
-        b[6][7] = { "Mambo",       "Latin", 110, makeGroove (4,4,R16, { {BASS,"x..x..x...x..x.."},{COW,"x.x.x.x.x.x.x.x."},{CGH,"..x...x...x...x."},{SNR,"....x.......x..."} }) };
-        b[6][8] = { "Cha-Cha",     "Latin", 124, makeGroove (4,4,R16, { {COW,"x...x...x...x..."},{CGL,"..x...x...x...x."},{CLV,"x..x..x.x..x..x."},{SNR,"....x.......x..."} }) };
-        b[6][9] = { "Samba",       "Latin", 132, makeGroove (2,4,R16, { {BASS,"x...X..."},{TMB,"xxxxxxxx"},{CGH,"..x.x.x."},{CLV,"x..x..x."} }) };
+        b[6][0] = { "One Drop",    "Reggae", 72, makeGroove (4,4,R16, { {BASS,"........x......."},{SNR,"........x......."},{HAT,"x.x.x.x.x.x.x.x."},{OHH,"..x...x...x...x."} }) };
+        b[6][1] = { "Steppers",    "Reggae", 76, makeGroove (4,4,R16, { {BASS,"x...x...x...x..."},{SNR,"....x.......x..."},{HAT,"x.x.x.x.x.x.x.x."},{OHH,"..x...x...x...x."} }) };
+        b[6][2] = { "Rockers",     "Reggae", 78, makeGroove (4,4,R16, { {BASS,"x.......x......."},{SNR,"....x.......x..."},{HAT,"x.x.x.x.x.x.x.x."},{OHH,"..x...x...x...x."} }) };
+        b[6][3] = { "Dancehall",   "Reggae", 94, makeGroove (4,4,R16, { {BASS,"x.....x.x......."},{SNR,"........x......."},{HAT,"x.x.x.x.x.x.x.x."},{OHH,"..x...x...x...x."} }) };
+        b[6][4] = { "Dub",         "Reggae", 70, makeGroove (4,4,R16, { {BASS,"........x......."},{SNR,"........x......."},{HAT,"x.x.x.x.x.x.x.x."},{OHH,"..x...x...x...x."},{CLP,"............x..."} }) };
+        b[6][5] = { "Bossa Nova",  "Latin", 130, makeGroove (4,4,R16, { {BASS,"x.......x......."},{CLV,"x..x..x...x.x..."},{CGH,"..x...x...x...x."} }) };
+        b[6][6] = { "Songo",       "Latin", 104, makeGroove (4,4,R16, { {BASS,"x..x..x...x..x.."},{CGL,"x..x..x...x..x.."},{CGH,"..x.x...x.x...x."},{COW,"x.x.x.x.x.x.x.x."} }) };
+        b[6][7] = { "Mambo",       "Latin", 110, makeGroove (4,4,R16, { {BASS,"x..x..x...x..x.."},{COW,"x..x.xx..x.xx.x."},{CGH,"..x...x...x...x."},{SNR,"....x.......x..."} }) };
+        b[6][8] = { "Cha-Cha",     "Latin", 124, makeGroove (4,4,R16, { {COW,"x...x...x...x..."},{CGL,"..x...x...x...x."},{CLV,"x..x..x...x.x..."},{SNR,"............x.x."} }) };
+        b[6][9] = { "Samba",       "Latin", 132, makeGroove (2,4,R16, { {BASS,"x...X..."},{TMB,"xxxxxxxx"},{CGH,"x.xx.x.x"},{CLV,"x..x..x."} }) };
 
         // === Bank 8: ROCK ========================================================
         b[7][0] = { "Basic Rock",  "Rock", 120, makeGroove (4,4,R16, { {BASS,"x.......x......."},{SNR,"....x.......x..."},{HAT,"x.x.x.x.x.x.x.x."} }) };

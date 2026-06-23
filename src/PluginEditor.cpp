@@ -529,10 +529,10 @@ void LMOneAudioProcessorEditor::resized()
         trb.removeFromLeft (6);
         recButton.setBounds  (trb.removeFromLeft (52));
         trb.removeFromLeft (14);
-        meterBox.setBounds (trb.removeFromLeft (56));   // time signature
-        trb.removeFromLeft (4);
-        rateBox.setBounds  (trb.removeFromLeft (56));   // step rate
-        trb.removeFromLeft (8);
+        meterBox.setBounds (trb.removeFromLeft (76));   // time signature (wide enough for the value)
+        trb.removeFromLeft (6);
+        rateBox.setBounds  (trb.removeFromLeft (76));   // step rate
+        trb.removeFromLeft (10);
         clearButton.setBounds (trb.removeFromLeft (28).withSizeKeepingCentre (24, 24));   // small flat X
         trb.removeFromLeft (12);
         tempoLabel.setBounds (trb.removeFromLeft (46));

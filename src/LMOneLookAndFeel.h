@@ -42,6 +42,12 @@ public:
         setColour (PopupMenu::highlightedTextColourId,        Colours::black);
     }
 
+    // Compact combo font so short values (e.g. "1/16T", "12/8") fit without "...".
+    juce::Font getComboBoxFont (juce::ComboBox&) override
+    {
+        return juce::Font (juce::FontOptions (13.0f, juce::Font::bold));
+    }
+
     //==========================================================================
     void drawRotarySlider (juce::Graphics& g, int x, int y, int width, int height,
                            float sliderPos, float startAngle, float endAngle,
