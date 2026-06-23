@@ -79,6 +79,9 @@ VoiceStripComponent::VoiceStripComponent (LMOneAudioProcessor& proc, int voiceIn
     addAndMakeVisible (muteButton);
     addAndMakeVisible (soloButton);
 
+    outButton.setTooltip ("Route this channel to its own direct out (LUNA multi-out mixer)");
+    addAndMakeVisible (outButton);
+
     const auto id = "v" + juce::String (index);
     levelAtt = std::make_unique<SliderAttachment> (processor.apvts, id + "_level", levelSlider);
     if (auto* p = processor.apvts.getParameter (id + "_level"))   // double-click fader -> default
@@ -87,6 +90,7 @@ VoiceStripComponent::VoiceStripComponent (LMOneAudioProcessor& proc, int voiceIn
     tuneAtt  = std::make_unique<SliderAttachment> (processor.apvts, id + "_tune",  tuneSlider);
     muteAtt  = std::make_unique<ButtonAttachment> (processor.apvts, id + "_mute",  muteButton);
     soloAtt  = std::make_unique<ButtonAttachment> (processor.apvts, id + "_solo",  soloButton);
+    outAtt   = std::make_unique<ButtonAttachment> (processor.apvts, id + "_out",   outButton);
 
     updateSourceLabel();
     refreshShuffle();
@@ -152,8 +156,10 @@ void VoiceStripComponent::resized()
 
     // Bottom-up: mute/solo, shuffle, tune, pan. Each label sits above its control.
     auto bottom = r.removeFromBottom (20);
-    muteButton.setBounds (bottom.removeFromLeft (bottom.getWidth() / 2).reduced (1));
-    soloButton.setBounds (bottom.reduced (1));
+    const int third = bottom.getWidth() / 3;
+    muteButton.setBounds (bottom.removeFromLeft (third).reduced (1));
+    soloButton.setBounds (bottom.removeFromLeft (third).reduced (1));
+    outButton.setBounds  (bottom.reduced (1));
     r.removeFromBottom (4);
 
     // Shuffle: SHUFFLE label, LED readout, a small gap, then < > arrows beneath.

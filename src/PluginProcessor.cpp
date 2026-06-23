@@ -13,10 +13,22 @@ static float shuffleAmountForIndex (int idx) noexcept
 }
 
 //==============================================================================
+// Output buses: a main stereo mix + one stereo "direct out" per mixer channel,
+// named by voice so LUNA's multi-out mixer labels them clearly. The direct outs
+// are disabled by default (the host/LUNA enables the ones it routes).
+auto LMOneAudioProcessor::makeBusesProperties() -> BusesProperties
+{
+    BusesProperties props;
+    props = props.withOutput ("Main", juce::AudioChannelSet::stereo(), true);
+    for (int i = 0; i < DrumKit::kNumChannels; ++i)
+        props = props.withOutput (juce::String (LMOne::kVoiceDefs[(size_t) i].name) + " Out",
+                                  juce::AudioChannelSet::stereo(), false);
+    return props;
+}
+
+//==============================================================================
 LMOneAudioProcessor::LMOneAudioProcessor()
-    : AudioProcessor (BusesProperties().withOutput ("Output",
-                                                    juce::AudioChannelSet::stereo(),
-                                                    true)),
+    : AudioProcessor (makeBusesProperties()),
       apvts (*this, nullptr, "PARAMS", createParameterLayout())
 {
     // Build the 12 LM-1 pads from the canonical voice table.
@@ -41,6 +53,7 @@ LMOneAudioProcessor::LMOneAudioProcessor()
         voiceParams[(size_t) i].mute  = apvts.getRawParameterValue (id + "_mute");
         voiceParams[(size_t) i].solo  = apvts.getRawParameterValue (id + "_solo");
         voiceParams[(size_t) i].swing = apvts.getRawParameterValue (id + "_swing");
+        voiceParams[(size_t) i].out   = apvts.getRawParameterValue (id + "_out");
     }
 
     seqTempoParam = apvts.getRawParameterValue ("seqTempo");
@@ -120,6 +133,11 @@ LMOneAudioProcessor::createParameterLayout()
         layout.add (std::make_unique<AudioParameterChoice> (
             ParameterID { id + "_swing", 1 }, n + " Swing",
             juce::StringArray { "Follow", "Straight", "Light", "Medium", "Triplet", "Hard" }, 0));
+
+        // Output routing: off = Main mix (default), on = this channel's direct out
+        // (which appears in LUNA's multi-out mixer as "<voice> Out").
+        layout.add (std::make_unique<AudioParameterBool> (
+            ParameterID { id + "_out", 1 }, n + " Direct Out", false));
     }
 
     return layout;
@@ -430,9 +448,19 @@ void LMOneAudioProcessor::saveUserLibrary() const
 
 bool LMOneAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-    const auto out = layouts.getMainOutputChannelSet();
-    return out == juce::AudioChannelSet::stereo()
-        || out == juce::AudioChannelSet::mono();
+    // Main out must be stereo or mono.
+    const auto main = layouts.getMainOutputChannelSet();
+    if (main != juce::AudioChannelSet::stereo() && main != juce::AudioChannelSet::mono())
+        return false;
+
+    // Each direct out must be stereo or disabled (LUNA enables the ones it uses).
+    for (int b = 1; b < layouts.outputBuses.size(); ++b)
+    {
+        const auto s = layouts.outputBuses.getUnchecked (b);
+        if (! s.isDisabled() && s != juce::AudioChannelSet::stereo())
+            return false;
+    }
+    return true;
 }
 
 //==============================================================================
@@ -576,6 +604,20 @@ void LMOneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         pn[(size_t) c]  = voiceParams[(size_t) c].pan->load();
     }
 
+    // Output routing: Main mix vs each channel's direct out. Grab the bus views
+    // once; a channel set to Direct falls back to Main if LUNA hasn't enabled
+    // that bus yet (so it's never silent).
+    auto mainBus = getBusBuffer (buffer, false, 0);
+    std::array<juce::AudioBuffer<float>, (size_t) DrumKit::kNumChannels> directBus;
+    std::array<bool, (size_t) DrumKit::kNumChannels> toDirect {};
+    for (int c = 0; c < DrumKit::kNumChannels; ++c)
+    {
+        directBus[(size_t) c] = getBusBuffer (buffer, false, 1 + c);
+        toDirect[(size_t) c]  = voiceParams[(size_t) c].out != nullptr
+                             && voiceParams[(size_t) c].out->load() > 0.5f
+                             && directBus[(size_t) c].getNumChannels() > 0;
+    }
+
     // --- Segmented render: fire events at their offsets, render between them --
     // (DrumVoice::render is additive and advances each voice's phase, so a note
     //  triggered at offset i starts exactly at sample i — sample-accurate.)
@@ -591,7 +633,8 @@ void LMOneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         for (int v = 0; v < (int) voices.size(); ++v)
         {
             const int c = channelForVoice (v);
-            voices[(size_t) v].render (buffer, cursor, next - cursor, lvl[(size_t) c], pn[(size_t) c]);
+            auto& dest = toDirect[(size_t) c] ? directBus[(size_t) c] : mainBus;
+            voices[(size_t) v].render (dest, cursor, next - cursor, lvl[(size_t) c], pn[(size_t) c]);
         }
         cursor = next;
     }

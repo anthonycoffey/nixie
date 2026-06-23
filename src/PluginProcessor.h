@@ -133,6 +133,7 @@ public:
 
 private:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    static BusesProperties makeBusesProperties();   // main stereo + per-voice direct outs
 
     void triggerPad (int padIndex, float velocity, DrumKit* kit);
     static float applyCrush (float sample, int bits, float mix);
@@ -175,6 +176,7 @@ private:
         std::atomic<float>* mute  = nullptr;  // 0/1
         std::atomic<float>* solo  = nullptr;  // 0/1
         std::atomic<float>* swing = nullptr;  // 0/1 — follow the global Shuffle amount
+        std::atomic<float>* out   = nullptr;  // 0 = Main mix, 1 = direct (per-voice) out
     };
     std::array<VoiceParams, (size_t) DrumKit::kNumChannels> voiceParams;
 

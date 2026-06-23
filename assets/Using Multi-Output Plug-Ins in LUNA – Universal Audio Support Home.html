@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <!-- v27538 -->
+
+
+  <title>Using Multi-Output Plug-Ins in LUNA &ndash; Universal Audio Support Home</title>
+
+  
+
+  <meta name="description" content="In this article Multi-Output Plug-Ins Overview Understanding the Multi-Output Mixer Adding Multiple Output Channels from Within a Plug-In..." /><meta property="og:image" content="https://help.uaudio.com/hc/theming_assets/01HZJHZ3X55QYCVX583Z1XRX3A" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Universal Audio Support Home" />
+<meta property="og:title" content="Using Multi-Output Plug-Ins in LUNA" />
+<meta property="og:description" content="In this article
+Multi-Output Plug-Ins Overview
+Understanding the Multi-Output Mixer
+Adding Multiple Output Channels from Within a Plug-In
+Adding Multiple Output Channels from the LUNA Mixer
+Working..." />
+<meta property="og:url" content="https://help.uaudio.com/hc/en-us/articles/30088622351636-Using-Multi-Output-Plug-Ins-in-LUNA" />
+<link rel="canonical" href="https://help.uaudio.com/hc/en-us/articles/30088622351636-Using-Multi-Output-Plug-Ins-in-LUNA">
+<link rel="alternate" hreflang="en-us" href="https://help.uaudio.com/hc/en-us/articles/30088622351636-Using-Multi-Output-Plug-Ins-in-LUNA">
+<link rel="alternate" hreflang="x-default" href="https://help.uaudio.com/hc/en-us/articles/30088622351636-Using-Multi-Output-Plug-Ins-in-LUNA">
+
+  <link rel="stylesheet" href="//static.zdassets.com/hc/assets/application-9728c5319eba0423daea7e82ae8a1641.css" media="all" id="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="/hc/theming_assets/622919/248709/style.css?digest=49648383363860">
+
+  <link rel="icon" type="image/x-icon" href="/hc/theming_assets/01J023JG6A3P3E0E2FWNDG2C3C">
+
+    
+
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PTM8G9JB');</script>
+<!-- End Google Tag Manager -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<meta name="google-site-verification" content="UrXx8iS5tiIE0oDxcHqZGMpdRxBEI3fep-cp9-lIOCg" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <style type="text/css">
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url(/hc/theming_assets/01HZJHYRAPF66TDSFJX5STARM5) format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url(/hc/theming_assets/01HZJHYRN8Q01G1NZA9DV99QF8) format('woff2');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url(/hc/theming_assets/01HZJHYRN8Q01G1NZA9DV99QF8) format('woff2');
+      font-weight: bolder;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style> 
+
+
+
+  <style type="text/css">
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url(/hc/theming_assets/01HZJHYRAPF66TDSFJX5STARM5) format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+ 
+  </style> 
+
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+
+<link
+  rel="stylesheet"
+  href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/styles/github.min.css"
+/>
+<link rel="stylesheet" href="/hc/theming_assets/01HZJHZ31EWV5GN8KY51WSDVQR" />
+<script src="//cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script
+  src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/highlight.min.js"
+></script>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"
+></script>
+<script>
+  window.LotusConfig = {}; LotusConfig.css = { activeClass: 'is-active',
+  hiddenClass: 'is-hidden' }; LotusConfig.signedIn =
+  false; LotusConfig.infoTitle =
+  "Note"; LotusConfig.successTitle =
+  "Success"; LotusConfig.warningTitle =
+  "Warning"; LotusConfig.dangerTitle =
+  "Danger";
+
+</script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@ryangjchandler/spruce@2.x.x/dist/spruce.umd.js"
+></script>
+<script
+  src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"
+></script>
+<script>
+  window.Spruce.store('mobileMenu', { isOpen: false, });
+</script>
+
+<script src="/hc/theming_assets/01HZJHYZG9YQJNY2SGTRB7QF86"></script>
+<script src="/hc/theming_assets/01HZJHZ2SPPQXJV7HT4Z5ERNWH"></script>
+<script src="/hc/theming_assets/01HZJHYYND2F0XN3PDZZRVDFY9"></script>
+<script src="/hc/theming_assets/01HZJHYZ03SXD1Y2G9WMCBV855"></script>
+<script defer src="/hc/theming_assets/01HZJHYYT8GF6FESD332B9Q0GX"></script>
+<script src="/hc/theming_assets/01HZJHYZ9RQTHCE9W60DXQ4ASR"></script>
+<script src="/hc/theming_assets/01HZJHZ2QD1P3REWNRGQ2QXTDZ"></script>
+<script src="/hc/theming_assets/01HZJHYZ4JAPHF058QBGXXPA3N"></script>
+<script src="/hc/theming_assets/01HZJHZ21VY2CB48JP60V25FXK"></script>
+<script src="/hc/theming_assets/01HZJHZ251HKXH29WGZRVEEDJR"></script>
+
+<script src="/hc/theming_assets/01J5E1E8027DNZ18Y1CKH2860J"></script>
+
+<link rel="stylesheet" href="/hc/theming_assets/01HZJHZ2J219GW5R2D88AG295E" />
+<script src="/hc/theming_assets/01J3G14Z6M61V973NB22P7FK07"></script>
+
+<script>
+  window.LotusConfig.icons = { 
+    default: "/hc/theming_assets/01HZJHYY6Y1DR2J4W3RK9B9CRP",
+      
+    //PRODUCTS
+    25493960658196: "/hc/theming_assets/01HZJHYXPGGENHQWM2N8ETCRZR",
+    25494413039508: "/hc/theming_assets/01HZJHYRQDHKBX7KWFBTV29BKD",
+    25494032900116: "/hc/theming_assets/01HZJHYSFWP1STP5ZTP2GECNDP",
+    25495792267028: "/hc/theming_assets/01HZJHYSCQWTS78N565RWS8R5R",
+    4405283495060: "/hc/theming_assets/01HZJHYSDSDRXTRY30TCKN2DVK",
+    25496127324436: "/hc/theming_assets/01HZJHYXCTM2PBH2A123V9X5YF",
+    25496201266836: "/hc/theming_assets/01HZJHYS9SQ7XM2JWXNWEQS50R",
+    25496242357396: "/hc/theming_assets/01HZJHYRBNPFDH3A9HGDDKNQ8J",
+
+    //TOPICS
+    25496334976788: "/hc/theming_assets/01HZJHYX47ZG7DAHBR723RM2DG",
+    25496454726164: "/hc/theming_assets/01HZJHYSK9PJSVHGYH5XMTSVN2",
+    25496430020372: "/hc/theming_assets/01HZJHYSRYCV8BYFA7DKE12554",
+    200850443: "/hc/theming_assets/01HZJHYT7KQE9S1RANA33ZCQ6S",
+    12261923971860: "/hc/theming_assets/01HZJHYYC04Y0B39ADQJXPAGKH",
+    25496363838100: "/hc/theming_assets/01HZJHYR9JJQ2T4X9ES16JDM47",
+    25496305102996: "/hc/theming_assets/01HZJHYSWBP2JS93TJCCHEY6XX",
+    25496366516628: "/hc/theming_assets/01HZJHYSWRD9Q50ZDGQ0T0KKSB",
+
+  }
+</script>
+
+<script src="/hc/theming_assets/01HZJHYZ6JZ7WE6S7X12WCJ84D"></script>
+
+
+<script
+  id="__ada"
+  data-handle="universalaudio"
+  src="https://static.ada.support/embed2.js"
+></script>
+
+  
+</head>
+<body class="">
+  
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PTM8G9JB"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<a class="lt-skip-navigation" tabindex="1" href="#main-content">Skip to main content</a>
+<div class="lt-layout">
+
+
+  <header
+  id="shopify-section-header-new"
+  class="custom-header shopify-section mod_header_new_f4Z8ra_Header js-header lt-mb-lg-7"
+  style="height: 85px;"
+  data-custom-topbar
+  >
+  <div class="mod_header_new_f4Z8ra_Header__inner js-header-inner">
+    <a
+      href="https://www.uaudio.com/"
+      class="mod_header_new_f4Z8ra_Header__logo"
+      title="Redirect to homepage"
+    >
+      <span class="mod_header_new_f4Z8ra_Header__logo__full">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          width="92"
+          height="66"
+          viewBox="0 0 92 66"
+        >
+          <path
+            fill="currentColor"
+            d="M3.307 55.748h.973v6.107c0 1.868.132 2.737 1.422 2.737s1.421-.895 1.421-2.737v-6.107h.974v6.186c0 1.263-.026 2.132-.5 2.71-.395.5-1.08.816-1.895.816-.842 0-1.5-.315-1.895-.815-.474-.606-.5-1.474-.5-2.711v-6.186ZM11.203 56.485v8.791h-.869v-9.528h1.421l1.974 5.396c.29.79.553 1.58.79 2.369-.08-.816-.08-1.527-.08-2.08v-5.685h.87v9.528h-.974l-2.396-6.58a19.773 19.773 0 0 1-.736-2.21ZM18.546 55.748h-.974v9.528h.974v-9.528ZM20.02 55.748h.973l1.422 6.502c.079.342.158.842.236 1.5.08-.474.159-.974.29-1.527l1.421-6.448h.948l-2.185 9.528h-.92l-2.185-9.555ZM27.021 55.748h4.29v.895h-3.316v3.29h2.422v.869h-2.422v3.606h3.422v.895H27.02v-9.555ZM33.312 55.748h1.737c2.053 0 3.08.816 3.08 2.5 0 1.159-.527 1.975-1.501 2.29l1.553 4.738h-1.053L35.68 60.75c-.342.027-.684.027-1.026.027h-.395v4.5h-.974l.027-9.528Zm1.79 4.185c1.315 0 1.973-.552 1.973-1.658 0-1.132-.658-1.658-1.974-1.658h-.842v3.316h.842ZM40.286 62.75c.08 1.237.553 1.842 1.527 1.842.842 0 1.395-.632 1.395-1.58 0-1.026-.684-1.631-1.842-2.5-1.185-.868-1.843-1.5-1.843-2.79 0-1.21.895-2.158 2.106-2.158 1.421 0 2.29.948 2.342 2.58h-.921c-.079-1.185-.553-1.764-1.395-1.764-.79 0-1.29.526-1.29 1.342 0 .422.185.816.474 1.132.5.527 1.158.948 1.79 1.448 1.026.816 1.5 1.579 1.5 2.684 0 1.527-.947 2.5-2.342 2.5-1.5 0-2.395-.973-2.422-2.71l.921-.027ZM47.656 55.748h1.342l2.08 9.528H50.05l-.553-2.816h-2.395l-.553 2.816h-.974l2.08-9.528Zm1.631 5.844-1-4.975-1 4.975h2ZM52.92 55.748h.974v8.633h3v.922H52.92v-9.555ZM62.08 55.748h1.342l2.079 9.528h-1.027l-.552-2.816h-2.395l-.553 2.816H60l2.08-9.528Zm1.631 5.844-1-4.975-1 4.975h2ZM67.002 55.748h.974v6.107c0 1.868.131 2.737 1.421 2.737s1.421-.895 1.421-2.737v-6.107h.974v6.186c0 1.263-.052 2.132-.5 2.71-.395.5-1.079.816-1.895.816-.842 0-1.5-.315-1.895-.816-.474-.605-.5-1.473-.5-2.71v-6.186ZM73.793 55.748h1.763c2.264 0 3.159 1.474 3.159 4.738 0 3.29-.895 4.79-3.159 4.79h-1.763v-9.528Zm.974 8.633c.184.027.368.027.526.027 1.895 0 2.448-1.132 2.448-3.948 0-2.79-.553-3.896-2.421-3.896-.185 0-.369.027-.553.027v7.79ZM81.661 55.748h-.974v9.528h.974v-9.528ZM83.373 60.512c0-3.29.921-4.948 2.632-4.948 1.71 0 2.632 1.658 2.632 4.948 0 3.29-.921 4.948-2.632 4.948-1.737.027-2.632-1.658-2.632-4.948Zm1.026-.21c0 2.895.422 4.29 1.606 4.29 1.158 0 1.606-1.342 1.606-4.053 0-2.738-.474-4.054-1.606-4.054-1.132-.026-1.605 1.237-1.605 3.817ZM55.292 36.219v-6.843l19.687-.948-.105-1.369H55.318V15.085a6.026 6.026 0 0 0-6.027-6.027 6.026 6.026 0 0 0-6.027 6.027V27.086h-1.159l-2.21 3.053 3.369-.158v5.422c0 1.921-1.553 3.474-3.501 3.5-1.921 0-3.474-1.552-3.5-3.5l.026-17.187v-.263s.079-2.316-1.264-3.5c-1.79-1.554-5.474-.659-5.474-.659 4.58.026 4.185 3.948 4.185 3.948v17.661a6.026 6.026 0 0 0 6.027 6.027 6.026 6.026 0 0 0 6.027-6.027V29.85l7.001-.343v6.528s-.131 2.316 1.211 3.5c1.79 1.553 5.475.658 5.475.658-4.37.027-4.185-3.974-4.185-3.974Zm-9.502-9.16V15.084c0-1.921 1.553-3.474 3.5-3.5 1.922 0 3.475 1.552 3.501 3.5l.027 11.976H45.79Z"
+          ></path>
+          <path
+            fill="currentColor"
+            d="M6.73 26.112 46 3.345l39.27 22.767L46 48.879 6.73 26.112Zm83.567 0L46 .424 1.703 26.112 46 51.8l44.297-25.688Z"
+          ></path>
+        </svg>
+      </span>
+
+      <span class="mod_header_new_f4Z8ra_Header__logo__scroll">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          width="92"
+          height="52"
+          viewBox="0 0 90 52"
+        >
+          <path
+            fill="currentColor"
+            d="M54.29 36.062V29.22l19.688-.948-.105-1.368H54.317V14.927A6.026 6.026 0 0 0 48.29 8.9a6.026 6.026 0 0 0-6.027 6.027V26.93h-1.158l-2.211 3.053 3.369-.158v5.422c0 1.922-1.553 3.475-3.501 3.5-1.921 0-3.474-1.552-3.5-3.5l.026-17.187v-.263s.079-2.316-1.264-3.5c-1.79-1.553-5.474-.659-5.474-.659 4.58.027 4.185 3.948 4.185 3.948v17.661a6.026 6.026 0 0 0 6.027 6.028 6.026 6.026 0 0 0 6.027-6.028v-5.553l7.002-.342v6.527s-.132 2.316 1.21 3.5c1.79 1.553 5.475.659 5.475.659-4.37.026-4.185-3.975-4.185-3.975Zm-9.5-9.16V14.928c0-1.921 1.552-3.474 3.5-3.5 1.921 0 3.474 1.553 3.5 3.5l.027 11.976h-7.028Z"
+          ></path>
+          <path
+            fill="currentColor"
+            d="M5.73 25.955 45 3.188l39.27 22.767L45 48.722 5.73 25.955Zm83.567 0L45 .267.703 25.955 45 51.644l44.297-25.689Z"
+          ></path>
+        </svg>
+      </span>
+    </a>
+
+    <nav class="mod_header_new_f4Z8ra_Header__nav">
+      <ul class="mod_header_new_f4Z8ra_Header__nav__list">
+
+        <li>
+
+          <a href="https://www.uaudio.com/products">Shop</a>
+        </li>
+
+        <li>
+
+          <a href="https://www.uaudio.com/blogs/ua">Blog</a>
+
+        </li>
+
+        <li>
+
+          <a href="https://help.uaudio.com/hc/en-us">Support</a>
+
+        </li>
+
+        <li>
+
+          <a href="https://www.uaudio.com/pages/on-sale">Sale</a>
+
+        </li>
+
+      </ul>
+    </nav>
+
+    <div class="mod_header_new_f4Z8ra_Header__actions">
+      <a
+        class="mod_header_new_f4Z8ra_Header__wishlist swym-wishlist"
+        href="https://www.uaudio.com/pages/wishlist"
+        title="Redirect to wishlist"
+        data-swym-loaded="true"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          width="30"
+          height="30"
+          viewBox="0 0 30 30"
+        >
+          <path
+            fill="currentColor"
+            d="M5.625 26.875V9.519c0-.575.193-1.055.578-1.44.386-.386.866-.579 1.441-.579h10.962c.575 0 1.055.193 1.44.578.386.386.579.866.579 1.441v17.356l-7.5-3.221-7.5 3.221Zm1.25-1.938 6.25-2.687 6.25 2.688V9.518c0-.192-.08-.368-.24-.529-.16-.16-.337-.24-.53-.24H7.646c-.193 0-.37.08-.53.24-.16.16-.24.337-.24.53v15.418Zm16.25-1.812V5.769c0-.192-.08-.368-.24-.529-.16-.16-.337-.24-.53-.24H9.376V3.75h12.98c.576 0 1.056.193 1.442.578.385.386.578.866.578 1.441v17.356h-1.25Z"
+          ></path>
+          <path
+            d="M23.625 23.125V5H9.875V3.75H24.875V23.125H23.625ZM6.125 26.875V7.5H21.125V26.875L13.625 23.6538L6.125 26.875Z"
+            fill="none"
+          ></path>
+        </svg>
+      </a>
+
+      <a
+        href="https://www.uaudio.com/account"
+        class="mod_header_new_f4Z8ra_Header__account"
+        title="Redirect to account"
+      >
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          fill="none"
+          viewBox="0 0 30 30"
+        >
+          <path
+            fill="currentColor"
+            d="M8.245 21.856a14.37 14.37 0 0 1 3.382-1.814c1.193-.445 2.484-.667 3.873-.667 1.39 0 2.68.222 3.873.667a14.37 14.37 0 0 1 3.382 1.814 10.03 10.03 0 0 0 1.991-3.027c.503-1.163.754-2.44.754-3.829 0-2.77-.974-5.13-2.922-7.078C20.63 5.974 18.271 5 15.5 5c-2.77 0-5.13.974-7.078 2.922C6.474 9.87 5.5 12.229 5.5 15c0 1.39.251 2.666.754 3.83a10.03 10.03 0 0 0 1.991 3.026Zm7.256-6.231c-1.054 0-1.942-.361-2.666-1.085-.723-.723-1.085-1.61-1.085-2.664s.361-1.942 1.085-2.666c.723-.723 1.61-1.085 2.664-1.085s1.942.362 2.666 1.085c.723.723 1.085 1.61 1.085 2.664s-.361 1.942-1.085 2.666c-.723.723-1.61 1.085-2.664 1.085ZM15.5 26.25c-1.569 0-3.038-.292-4.406-.876a11.229 11.229 0 0 1-3.572-2.396 11.23 11.23 0 0 1-2.396-3.572C4.542 18.038 4.25 16.57 4.25 15c0-1.569.292-3.038.876-4.406a11.23 11.23 0 0 1 2.396-3.572 11.23 11.23 0 0 1 3.572-2.396c1.368-.584 2.837-.876 4.406-.876 1.569 0 3.038.292 4.406.876a11.23 11.23 0 0 1 3.572 2.396 11.229 11.229 0 0 1 2.396 3.572c.584 1.368.876 2.837.876 4.406 0 1.569-.292 3.038-.876 4.406a11.23 11.23 0 0 1-2.396 3.572 11.23 11.23 0 0 1-3.572 2.396c-1.368.584-2.837.876-4.406.876Zm0-1.25a9.938 9.938 0 0 0 3.401-.605c1.116-.403 2.08-.954 2.892-1.655a9.584 9.584 0 0 0-2.82-1.546c-1.067-.38-2.225-.569-3.473-.569-1.248 0-2.41.186-3.486.556-1.075.371-2.01.891-2.807 1.56.812.7 1.776 1.251 2.892 1.654A9.938 9.938 0 0 0 15.5 25Zm0-10.625c.702 0 1.294-.241 1.776-.724.483-.482.724-1.074.724-1.776s-.241-1.294-.724-1.776c-.482-.483-1.074-.724-1.776-.724s-1.294.241-1.776.724c-.483.482-.724 1.074-.724 1.776s.241 1.294.724 1.776c.482.483 1.074.724 1.776.724Z"
+          ></path>
+        </svg>
+
+      </a>
+
+      <a
+        href="https://www.uaudio.com/cart"
+        data-drawer-name="cart"
+        class="mod_header_new_f4Z8ra_Header__cart"
+        title="Redirect to cart"
+      >
+        <span class="js-cart-icon-empty" style="display: block;">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 -960 960 960"
+          >
+            <path
+              d="M292.308-115.384q-25.308 0-42.654-17.347-17.347-17.346-17.347-42.654 0-25.307 17.347-42.653 17.346-17.347 42.654-17.347 25.307 0 42.654 17.347 17.346 17.346 17.346 42.653 0 25.308-17.346 42.654-17.347 17.347-42.654 17.347Zm375.384 0q-25.307 0-42.654-17.347-17.346-17.346-17.346-42.654 0-25.307 17.346-42.653 17.347-17.347 42.654-17.347 25.308 0 42.654 17.347 17.347 17.346 17.347 42.653 0 25.308-17.347 42.654-17.346 17.347-42.654 17.347ZM235.231-740 342-515.385h280L745.077-740H235.231Zm-19.539-40h596.924L645.923-475.384H324l-65.538 119.999h469.231v40.001H189.615l109.769-196.001L152.307-820H80v-40h97.692l38 80ZM342-515.385h280-280Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </span>
+
+        <span class="js-cart-icon-fill" style="display: none;">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+            fill="none"
+          >
+            <path
+              d="M9.63463 26.3943C9.10738 26.3943 8.66306 26.2136 8.30169 25.8522C7.94029 25.4908 7.75959 25.0465 7.75959 24.5192C7.75959 23.992 7.94029 23.5477 8.30169 23.1863C8.66306 22.8249 9.10738 22.6442 9.63463 22.6442C10.1619 22.6442 10.6062 22.8249 10.9676 23.1863C11.3289 23.5477 11.5096 23.992 11.5096 24.5192C11.5096 25.0465 11.3289 25.4908 10.9676 25.8522C10.6062 26.2136 10.1619 26.3943 9.63463 26.3943ZM21.3654 26.3943C20.8381 26.3943 20.3938 26.2136 20.0324 25.8522C19.6711 25.4908 19.4904 25.0465 19.4904 24.5192C19.4904 23.992 19.6711 23.5477 20.0324 23.1863C20.3938 22.8249 20.8381 22.6442 21.3654 22.6442C21.8926 22.6442 22.3369 22.8249 22.6983 23.1863C23.0597 23.5477 23.2404 23.992 23.2404 24.5192C23.2404 25.0465 23.0597 25.4908 22.6983 25.8522C22.3369 26.2136 21.8926 26.3943 21.3654 26.3943ZM7.24038 5.625H23.5144C24.0577 5.625 24.4664 5.84655 24.7404 6.28966C25.0144 6.73276 25.0288 7.18909 24.7837 7.65866L21.2115 14.1683C21.0304 14.4728 20.7953 14.7115 20.506 14.8846C20.2168 15.0577 19.899 15.1443 19.5529 15.1443H10.625L9.10578 17.9327C8.97757 18.125 8.97356 18.3333 9.09375 18.5577C9.21394 18.782 9.39423 18.8942 9.63463 18.8942H23.2404V20.1443H9.63463C8.90546 20.1443 8.36139 19.837 8.00241 19.2224C7.64343 18.6078 7.63462 17.9904 7.97597 17.3702L9.85575 14.0192L5.25959 4.375H3V3.125H6.05288L7.24038 5.625Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </span>
+      </a>
+
+      <button
+        type="button"
+        class="mod_header_new_f4Z8ra_Header__hamburger js-offcanvas-trigger"
+        data-drawer-name="menu"
+        title="Menu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          width="22"
+          height="14"
+          viewBox="0 0 22 14"
+        >
+          <path
+            fill="currentColor"
+            d="M.375 13.586v-1.25h21.25v1.25H.375Zm0-5.961v-1.25h21.25v1.25H.375Zm0-5.962V.413h21.25v1.25H.375Z"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <aside
+    class="mod_header_new_f4Z8ra_Offcanvas js-offcanvas"
+    data-drawer-names="menu"
+  >
+    <div class="">
+      <div class="mod_header_new_f4Z8ra_Menu__header js-menu-header">
+        <a
+          href="https://www.uaudio.comhttps://www.uaudio.comhttps://www.uaudio.com/"
+          class="mod_header_new_f4Z8ra_Menu__logo"
+          title="Redirect to homepage"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            width="92"
+            height="52"
+            viewBox="0 0 90 52"
+          >
+            <path
+              fill="currentColor"
+              d="M54.29 36.062V29.22l19.688-.948-.105-1.368H54.317V14.927A6.026 6.026 0 0 0 48.29 8.9a6.026 6.026 0 0 0-6.027 6.027V26.93h-1.158l-2.211 3.053 3.369-.158v5.422c0 1.922-1.553 3.475-3.501 3.5-1.921 0-3.474-1.552-3.5-3.5l.026-17.187v-.263s.079-2.316-1.264-3.5c-1.79-1.553-5.474-.659-5.474-.659 4.58.027 4.185 3.948 4.185 3.948v17.661a6.026 6.026 0 0 0 6.027 6.028 6.026 6.026 0 0 0 6.027-6.028v-5.553l7.002-.342v6.527s-.132 2.316 1.21 3.5c1.79 1.553 5.475.659 5.475.659-4.37.026-4.185-3.975-4.185-3.975Zm-9.5-9.16V14.928c0-1.921 1.552-3.474 3.5-3.5 1.921 0 3.474 1.553 3.5 3.5l.027 11.976h-7.028Z"
+            ></path>
+            <path
+              fill="currentColor"
+              d="M5.73 25.955 45 3.188l39.27 22.767L45 48.722 5.73 25.955Zm83.567 0L45 .267.703 25.955 45 51.644l44.297-25.689Z"
+            ></path>
+          </svg>
+        </a>
+
+        <a href="#" class="" title="Redirect to wishlist">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+          >
+            <path
+              fill="currentColor"
+              d="M5.625 26.875V9.519c0-.575.193-1.055.578-1.44.386-.386.866-.579 1.441-.579h10.962c.575 0 1.055.193 1.44.578.386.386.579.866.579 1.441v17.356l-7.5-3.221-7.5 3.221Zm1.25-1.938 6.25-2.687 6.25 2.688V9.518c0-.192-.08-.368-.24-.529-.16-.16-.337-.24-.53-.24H7.646c-.193 0-.37.08-.53.24-.16.16-.24.337-.24.53v15.418Zm16.25-1.812V5.769c0-.192-.08-.368-.24-.529-.16-.16-.337-.24-.53-.24H9.376V3.75h12.98c.576 0 1.056.193 1.442.578.385.386.578.866.578 1.441v17.356h-1.25Z"
+            ></path>
+            <path
+              d="M23.625 23.125V5H9.875V3.75H24.875V23.125H23.625ZM6.125 26.875V7.5H21.125V26.875L13.625 23.6538L6.125 26.875Z"
+              fill="none"
+            ></path>
+          </svg>
+        </a>
+
+        <a
+          href="https://www.uaudio.comhttps://www.uaudio.com/cart"
+          data-drawer-name="cart"
+          class="mod_header_new_f4Z8ra_Menu__cart"
+          title="Redirect to cart"
+        >
+          <span
+            class="mod_header_new_f4Z8ra_Menu__cart__count js-cart-item-count"
+            data-item-count="0"
+          >0</span>
+
+          <span class="js-cart-icon-empty" style="display: block;">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 -960 960 960"
+            >
+              <path
+                d="M292.308-115.384q-25.308 0-42.654-17.347-17.347-17.346-17.347-42.654 0-25.307 17.347-42.653 17.346-17.347 42.654-17.347 25.307 0 42.654 17.347 17.346 17.346 17.346 42.653 0 25.308-17.346 42.654-17.347 17.347-42.654 17.347Zm375.384 0q-25.307 0-42.654-17.347-17.346-17.346-17.346-42.654 0-25.307 17.346-42.653 17.347-17.347 42.654-17.347 25.308 0 42.654 17.347 17.347 17.346 17.347 42.653 0 25.308-17.347 42.654-17.346 17.347-42.654 17.347ZM235.231-740 342-515.385h280L745.077-740H235.231Zm-19.539-40h596.924L645.923-475.384H324l-65.538 119.999h469.231v40.001H189.615l109.769-196.001L152.307-820H80v-40h97.692l38 80ZM342-515.385h280-280Z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </span>
+
+          <span class="js-cart-icon-fill" style="display: none;">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+            >
+              <path
+                d="M9.63463 26.3943C9.10738 26.3943 8.66306 26.2136 8.30169 25.8522C7.94029 25.4908 7.75959 25.0465 7.75959 24.5192C7.75959 23.992 7.94029 23.5477 8.30169 23.1863C8.66306 22.8249 9.10738 22.6442 9.63463 22.6442C10.1619 22.6442 10.6062 22.8249 10.9676 23.1863C11.3289 23.5477 11.5096 23.992 11.5096 24.5192C11.5096 25.0465 11.3289 25.4908 10.9676 25.8522C10.6062 26.2136 10.1619 26.3943 9.63463 26.3943ZM21.3654 26.3943C20.8381 26.3943 20.3938 26.2136 20.0324 25.8522C19.6711 25.4908 19.4904 25.0465 19.4904 24.5192C19.4904 23.992 19.6711 23.5477 20.0324 23.1863C20.3938 22.8249 20.8381 22.6442 21.3654 22.6442C21.8926 22.6442 22.3369 22.8249 22.6983 23.1863C23.0597 23.5477 23.2404 23.992 23.2404 24.5192C23.2404 25.0465 23.0597 25.4908 22.6983 25.8522C22.3369 26.2136 21.8926 26.3943 21.3654 26.3943ZM7.24038 5.625H23.5144C24.0577 5.625 24.4664 5.84655 24.7404 6.28966C25.0144 6.73276 25.0288 7.18909 24.7837 7.65866L21.2115 14.1683C21.0304 14.4728 20.7953 14.7115 20.506 14.8846C20.2168 15.0577 19.899 15.1443 19.5529 15.1443H10.625L9.10578 17.9327C8.97757 18.125 8.97356 18.3333 9.09375 18.5577C9.21394 18.782 9.39423 18.8942 9.63463 18.8942H23.2404V20.1443H9.63463C8.90546 20.1443 8.36139 19.837 8.00241 19.2224C7.64343 18.6078 7.63462 17.9904 7.97597 17.3702L9.85575 14.0192L5.25959 4.375H3V3.125H6.05288L7.24038 5.625Z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </span>
+        </a>
+
+        <button
+          type="button"
+          class="mod_header_new_f4Z8ra_Menu__close js-offcanvas-close"
+          aria-label="Close menu"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+          >
+            <path
+              d="M8.53344 24.4103L7.58984 23.4667L15.0565 16L7.58984 8.53334L8.53344 7.58974L16.0001 15.0564L23.4668 7.58974L24.4104 8.53334L16.9437 16L24.4104 23.4667L23.4668 24.4103L16.0001 16.9436L8.53344 24.4103Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mod_header_new_f4Z8ra_Menu__body">
+        <nav class="mod_header_new_f4Z8ra_Menu__nav">
+          <ul class="mod_header_new_f4Z8ra_Menu__nav__list">
+
+            <li>
+
+              <a
+                href="https://www.uaudio.com/products"
+                class="mod_header_new_f4Z8ra_Menu__link"
+              >
+                Shop
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.89275 20.3639L8.91064 19.3818L15.2943 12.9982L8.91064 6.61455L9.89275 5.63245L17.2585 12.9982L9.89275 20.3639Z" fill="#191919"/>
+                </svg>
+              </a>
+              
+            </li>
+
+            <li>
+
+              <a
+                href="https://www.uaudio.com/blogs/ua"
+                class="mod_header_new_f4Z8ra_Menu__link"
+              >
+                Blog
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.89275 20.3639L8.91064 19.3818L15.2943 12.9982L8.91064 6.61455L9.89275 5.63245L17.2585 12.9982L9.89275 20.3639Z" fill="#191919"/>
+                </svg>
+
+              </a>
+            </li>
+
+            <li>
+
+              <a
+                href="https://help.uaudio.com/hc/en-us"
+                class="mod_header_new_f4Z8ra_Menu__link"
+              >
+                Support
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.89275 20.3639L8.91064 19.3818L15.2943 12.9982L8.91064 6.61455L9.89275 5.63245L17.2585 12.9982L9.89275 20.3639Z" fill="#191919"/>
+                </svg>
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a
+                href="https://www.uaudio.com/pages/on-sale"
+                class="mod_header_new_f4Z8ra_Menu__link"
+              >
+                Sale
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.89275 20.3639L8.91064 19.3818L15.2943 12.9982L8.91064 6.61455L9.89275 5.63245L17.2585 12.9982L9.89275 20.3639Z" fill="#191919"/>
+                </svg>
+
+              </a>
+
+            </li>
+
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </aside>
+  </header>
+
+<div class="lt-layout__main">
+
+
+
+<script>
+  const topbar = document.querySelector('[data-topbar]');
+  const topbarCustom = document.querySelector('[data-custom-topbar]');
+  const menuBtnOpen = topbarCustom.querySelector('.js-offcanvas-trigger');
+  const menuBtnClose = topbarCustom.querySelector('.js-offcanvas-close');
+  const menu = topbarCustom.querySelector('.js-offcanvas');
+
+  menuBtnOpen.addEventListener('click', function() {
+    menu.classList.add('is-expanded');
+  });
+
+  menuBtnClose.addEventListener('click', function() {
+    menu.classList.remove('is-expanded');
+  })
+
+
+</script>
+
+
+
+
+<script>
+  const header = document.getElementById('shopify-section-header-new');
+  const jsheader = document.querySelector('.js-header-inner');
+  let lastScrollTop = 0;
+
+  function resizeHeader() {
+    let currentScrollTop = window.scrollY;
+    let windowHeight = window.innerHeight;
+
+    header.classList.toggle('condensed', currentScrollTop > 100);
+    header.classList.toggle('hide-on-scroll', currentScrollTop > windowHeight && currentScrollTop > lastScrollTop)
+
+    lastScrollTop = currentScrollTop;
+  }
+
+  window.addEventListener('scroll', resizeHeader, {
+    passive: !0
+  });
+  window.addEventListener('load', resizeHeader, {
+    passive: !0
+  });
+  window.addEventListener('resize', resizeHeader, {
+    passive: !0
+  });
+</script>
+
+
+<script>
+  const layoutMain = document.querySelector('.lt-layout__main');
+  if (!true && !LotusUtils.isHomePage()) {
+    layoutMain.style.paddingTop = '2rem';
+  }
+</script>
+
+
+
+  <main role="main">
+    <div class="lt-container article-page">
+  <div class="lt-container-inner">
+    <div class="lt-row lt-align-items-center lt-mb-5 lt-d-print-none">
+      <div class="lt-col-md-8 lt-mb-4">
+        <ol class="breadcrumbs">
+  
+    <li title="Universal Audio Support Home">
+      
+        <a href="/hc/en-us">Universal Audio Support Home</a>
+      
+    </li>
+  
+    <li title="Product Manuals">
+      
+        <a href="/hc/en-us/categories/12261923971860-Product-Manuals">Product Manuals</a>
+      
+    </li>
+  
+    <li title="LUNA Application Manual">
+      
+        <a href="/hc/en-us/sections/360008484871-LUNA-Application-Manual">LUNA Application Manual</a>
+      
+    </li>
+  
+</ol>
+
+      </div>
+      <div class="lt-col-md-4 lt-mb-4">
+        <div class="lt-search-box lt-search-box--small ">
+          <form role="search" class="search" data-search="" data-instant="true" autocomplete="off" action="/hc/en-us/search" accept-charset="UTF-8" method="get"><input type="hidden" name="utf8" value="&#x2713;" autocomplete="off" /><input type="search" name="query" id="query" placeholder="Search..." autocomplete="off" aria-label="Search..." /></form>
+        </div>
+      </div>
+    </div>
+    
+           <a href="https://www.uaudio.com/pages/on-sale?utm_source=helpua&utm_medium=onsitebanner&utm_campaign=bundle&utm_content=halfyear26">
+<img src="/hc/theming_assets/01KSK9X47WPKJPCTWCT7T1BRQC" alt="UAD Promo" style="padding-bottom: 25px">
+</a>
+    
+
+    <div class="lt-article-container" id="main-content">
+      
+      <div class="lt-article-container__column lt-article-container__article">
+        <article class="lt-article lt-mb-6" data-article itemscope itemtype="http://schema.org/Article">
+          <header>
+            <h1 class="lt-article__title lt-mb-4" itemprop="name">
+              
+              Using Multi-Output Plug-Ins in LUNA
+            </h1>
+
+            <div class="lt-d-sm-flex lt-justify-content-between lt-mb-4 lt-align-items-start">
+              <div class="lt-mb-2 lt-me-sm-4">
+                <div class="lt-entry-info ">
+                  
+                  <div class="lt-entry-info__content">
+                    
+                    <div class="lt-meta">
+                      
+                        Updated <time datetime="2026-01-13T22:00:03Z" title="2026-01-13T22:00:03Z" data-datetime="relative">January 13, 2026 22:00</time>
+                      
+                    </div>
+
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="lt-article-subscribe lt-d-flex lt-d-print-none lt-align-items-center">
+                
+                
+
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="lt-article__body rte rte-enhanced" itemprop="articleBody">
+            <h2 id="h_01J6ZQVYES1989MQ1RRVDPNRWP">In this article</h2><ul>
+<li data-list-item-id="ed0d8e55bc72372aa1aab2bc4bac818d4"><a href="#h_01KDRGR9JY1TX43WS0W99QWPPA">Multi-Output Plug-Ins Overview</a></li>
+<li data-list-item-id="ef92b57a0c6b59c1be10b5062c35427ab"><a href="#h_01J6ZQTXY25PC0VMNDGKEQ3AXS">Understanding the Multi-Output Mixer</a></li>
+<li data-list-item-id="ebe7d1c1a3f46e3e777732749fab8543d"><a href="#h_01J6ZQTXY2HZMFRKJ127Y1YJVC">Adding Multiple Output Channels from Within a Plug-In</a></li>
+<li data-list-item-id="e137583f2b9e296424262ef5d12855e64"><a href="#h_01J6ZQTXY2D9JPCKH2ERQGQENW">Adding Multiple Output Channels from the LUNA Mixer</a></li>
+<li data-list-item-id="e0c14b9e0aa1482c5d700cccc3f1031c8"><a href="#h_01J6ZQTXY2TPP6NR4KJNZY7HCK">Working with Multiple MIDI Channels in a Multi-Out Instrument</a></li>
+</ul><h1 id="h_01KDRGR9JY1TX43WS0W99QWPPA">Multi-Output Plug-Ins Overview</h1><p>Multi-output plug-in instruments include the ability to route audio output from additional channels beyond the plug-in's main output. LUNA's multi-output plug-in capabilities afford you expanded mixing and music production opportunities, and give you greater flexibility and control of the audio output from your plug-ins. LUNA's multi-output mixer is integrated directly within the plug-in interface and the LUNA timeline and mixer, and provides an extremely simple and intuitive multi-out workflow. </p><p data-prosemirror-content-type="node" data-prosemirror-node-name="paragraph" data-prosemirror-node-block="true" data-pm-slice="1 1 []"><strong data-prosemirror-content-type="mark" data-prosemirror-mark-name="strong">Important:</strong> When you add multi-out channels to an ARM-enabled instrument track, that instrument track and all associated multi-out tracks are switched out of ARM mode. Therefore, any plug-ins on the instrument tracks or on the Main track must be either UAD-2 DSP plug-ins or completely bypassed (powered off) to prevent latency. </p><hr><h1 id="h_01J6ZQTXY25PC0VMNDGKEQ3AXS">Understanding the Multi-Output Mixer</h1><p>LUNA allows you to configure multiple outputs with a multi-out plug-in directly in the plug-in's interface. You can also configure and work with multi-out channels in the LUNA mixer or timeline. </p><p>You can add as many mixer channels as your creative needs require.</p><p> </p><figure class="wysiwyg-image wysiwyg-image-resized" style="width: 75%;"><img style="aspect-ratio: 1408/284;" src="/hc/article_attachments/45267289044372" width="1408" height="284"></figure><p class="wysiwyg-text-align-center"><em>Multi-output plug-in channels in a multi-output plug-in</em> </p><figure class="wysiwyg-image wysiwyg-image-resized" style="width: 50%;"><img style="aspect-ratio: 600/1620;" src="/hc/article_attachments/42460861031188" width="600" height="1620"></figure><p class="wysiwyg-text-align-center"><em>Multi-output plug-in channels in the LUNA timeline</em></p><figure class="wysiwyg-image wysiwyg-image-resized" style="width: 75%;"><img style="aspect-ratio: 1148/796;" src="/hc/article_attachments/45267275270420" width="1148" height="796"></figure><p class="wysiwyg-text-align-center"><em>Multi-output plug-in channels in the LUNA mixer</em></p><hr><h1 id="h_01J6ZQTXY2HZMFRKJ127Y1YJVC">Adding Multiple Output Channels from Within a Plug-In</h1><p>You can very simply add multiple channels from inside a multi-output plug-in.</p><ol>
+<li data-list-item-id="eaf1d416b4b96b001dff081c8d96f04d7">Add your multi-output plug-in on an instrument track. The plug-in window opens. </li>
+<li data-list-item-id="e2019769f4034b5fd1035f31d8c233f5a">In the plug-in window, If MULTI-OUT MIXER is not highlighted, click it to open the multi-out mixer at the top of the plug-in window.</li>
+<li data-list-item-id="ea62edd71dbdc7d7fadbade4a1ff8632f">Click the plus symbol (<strong>+</strong>) to the left of output 1-2 to add more channels.<br><br> <img class="wysiwyg-image-resized" style="aspect-ratio: 690/270; width: 50%;" src="/hc/article_attachments/45267289049876" width="690" height="270">
+</li>
+<li data-list-item-id="ee4a7b5fcc3f7a8a42a0166bff4c0ed2a"> The Add Multi-Output floating window opens.<br><br> <img class="wysiwyg-image-resized" style="aspect-ratio: 470/302; width: 33%;" src="/hc/article_attachments/45267289053076" width="470" height="302">
+</li>
+<li data-list-item-id="e7c7aa1288ffae2378e4686f634f29b08">Select the format for the channels to add. Some plug-ins only allow stereo channels, and some include the ability to create both mono and stereo channels. If you are creating both mono and stereo channels, you must add them separately. </li>
+<li data-list-item-id="ecc6fef296b6fad72a3b31888d65a2789">Specify the number of tracks to create.</li>
+<li data-list-item-id="ebceeb2361f9ca96b5073c301681d0516">Type a name for the channel (for example, "drums" or "strings"). The names for each channel created are prepended with this name.</li>
+<li data-list-item-id="e29393d9e5dad454355f96db14c3ba94d">Click More Settings to configure more settings for the multi-out channels you create.<br><img class="wysiwyg-image-resized" style="aspect-ratio: 470/602; width: 33%;" src="/hc/article_attachments/45267275276564" width="470" height="602">
+</li>
+<li data-list-item-id="ef2d623934e808dcd85019b939a306062">If desired, select a multi-track tape machine and a Console to automatically add on each channel.</li>
+<li data-list-item-id="e11578436bd9d36e1c42b909375054e8b">In More Settings, to choose which multi-out channel to create as the first track, select the channel from the Multi-Out list. </li>
+<li data-list-item-id="ed18b429268bd8c7000bee45dedc87f43">In More Settings, to choose the MIDI output channel for created channels, choose a channel from the MIDI Out list. </li>
+<li data-list-item-id="edce78d936de13c754c4c22e5a7a0d65c">In More Settings, to cascade the MIDI outputs with the created channels, click Cascade MIDI Output. </li>
+<li data-list-item-id="e084d047cc9f4d49194dee3335df7190c">To add tracks, click ADD. To close the window without adding tracks, click DONE. </li>
+</ol><p>New plug-in channels appear in the MULTI-OUT MIXER area, and separate tracks are created in LUNA for each multi-out channel.</p><figure class="wysiwyg-image wysiwyg-image-resized" style="width: 75%;"><img style="aspect-ratio: 1396/272;" src="/hc/article_attachments/45267289056404" width="1396" height="272"></figure><p> </p><p><strong>Note:</strong> <span style="color: #1d1c1d;">By default, your plug-in internally routes audio to the plug-in's main mono or stereo output. To route audio to the LUNA multi-out mixer, you must </span><a href="#h_01J6ZQTXY2EAYV8NJYHJM7A2ZZ"><span style="color: #1d1c1d;">assign audio to additional outputs within the plug-in</span></a><span style="color: #1d1c1d;">.</span></p><hr><h1 id="h_01J6ZQTXY2D9JPCKH2ERQGQENW">Adding Multiple Output Channels from the LUNA Mixer</h1><ol>
+<li data-list-item-id="ee6e274d76d83f86c8f33db099be4863c">Add your multi-output plug-in on a LUNA instrument track.</li>
+<li data-list-item-id="e2e71c3f42591258645fcb8e787b49aee">In the LUNA mixer, right-click or Ctrl-click on the name of the channel with the multi-output plug-in.</li>
+<li data-list-item-id="e1710a753d0a9303960ae742673d02fb7">From the menu, choose Add Multi-Output.<br><br><img class="wysiwyg-image-resized" style="aspect-ratio: 744/772; width: 50%;" src="/hc/article_attachments/45267275281684" width="744" height="772">
+</li>
+<li data-list-item-id="e2fa44a85245318f4b0789f45d30f1d0b">The Add Multi-Output floating window opens.<br><img class="wysiwyg-image-resized" style="aspect-ratio: 470/302; width: 33%;" src="/hc/article_attachments/45267289053076" width="470" height="302"><br> </li>
+<li data-list-item-id="eb106adf007b3bd79fe38c94e5bf5126e">Select the format for the channels to add. Some plug-ins only allow stereo channels, and some include the ability to create both mono and stereo channels. If you are creating both mono and stereo channels, you must add them separately. </li>
+<li data-list-item-id="e9094a17d418528f4eba15d741b24615f">Specify the number of tracks to create.</li>
+<li data-list-item-id="e7900a6aefae003e2234abdbb41db67e0">Type a name for the channel (for example, "drums" or "strings"). The names for each channel created are prepended with this name.</li>
+<li data-list-item-id="ee1add01c958427afd78dc6e3ddc02c23">Click More Settings to configure more settings for the multi-out channels you create.<br><img class="wysiwyg-image-resized" style="aspect-ratio: 470/602; width: 33%;" src="/hc/article_attachments/45267275276564" width="470" height="602">
+</li>
+<li data-list-item-id="ee5a50e8380a67e78aa9647a2e6ce4614">If desired, select a multi-track tape machine and a Console to automatically add on each channel.</li>
+<li data-list-item-id="efa579e44139c16f2ce4d297c269c4c2b">In More Settings, to choose which multi-out channel to create as the first track, select the channel from the Multi-Out list. </li>
+<li data-list-item-id="e1c99b3618348388626089a4b7b04f049">In More Settings, to choose the MIDI output channel for created channels, choose a channel from the MIDI Out list. </li>
+<li data-list-item-id="ec1a20be4c0986690bdebd2319d4cc803">In More Settings, to cascade the MIDI outputs with the created channels, click Cascade MIDI Output. </li>
+<li data-list-item-id="e18857ba20fdd575e2cd813380d73cf95">To add tracks, click ADD. To close the window without adding tracks, click DONE. </li>
+</ol><p>New plug-in channels appear in the MULTI-OUT MIXER area within the instrument plug-in, and separate tracks are created in LUNA for each multi-out channel.</p><p><strong>Note:</strong> <span style="color: #1d1c1d;">By default, your plug-in internally routes audio to the plug-in's main mono or stereo output. To route audio to the LUNA multi-out mixer, you must </span><a href="#h_01J6ZQTXY2EAYV8NJYHJM7A2ZZ"><span style="color: #1d1c1d;">assign audio to additional outputs within the plug-in</span></a><span style="color: #1d1c1d;">.</span></p><h2 id="h_01J6ZQTXY2EAYV8NJYHJM7A2ZZ">Assigning additional audio outputs within a plug-in</h2><p>In general, multi-output plug-ins include a mixer or other method to assign audio to separate plug-in outputs. </p><p>For example, in Toontrack's EZ Drummer, on the Mixer page, you click the output for a mixer channel and select an output pair. </p><figure class="wysiwyg-image wysiwyg-image-resized" style="width: 50%;"><img style="aspect-ratio: 916/1000;" src="/hc/article_attachments/45267289061780" width="916" height="1000"></figure><p>Refer to your plug-in documentation for more information on how to assign channels to additional outputs within the plug-in. </p><h2 id="h_01KDRG4ZTRF3BPX34JYAV7Q5HX">Working with multi-output tracks</h2><p data-path-to-node="2">Multi-output tracks behave like standard instrument tracks. You can</p><ul data-path-to-node="3">
+<li data-list-item-id="ea1eabefbbc99dcd7e2bc94f6418fe56c"><p data-path-to-node="3,0,0">Rename, reorder, and color tracks in the Timeline or Mixer.</p></li>
+<li data-list-item-id="efd0420ed2cb29ecf004d41425cfea4db"><p data-path-to-node="3,1,0">Mix with all standard LUNA mixer features, including Solo, Mute, and plug-ins or LUNA Extensions.</p></li>
+<li data-list-item-id="e090532af7b7008fca0b13c2ce65366d5"><p data-path-to-node="3,2,0">Record MIDI to one track at a time or across multiple tracks using a multi-timbral controller.</p></li>
+</ul><h3 id="h_01KDRG4S75PH91S62MAZ36T9XT" data-path-to-node="4">Multi-output track differences</h3><p data-path-to-node="5">There are two main rules that distinguish multi-output tracks from standard tracks:</p><ul data-path-to-node="6">
+<li data-list-item-id="e71f2e33a44df86b1bbffe02050a3f536"><p data-path-to-node="6,0,0"><strong data-path-to-node="6,0,0" data-index-in-node="0">Deleting tracks:</strong> If you delete the main multi-out instrument track, all associated multi-output tracks are deleted automatically.</p></li>
+<li data-list-item-id="eb064bb78675e4960bef18d7e2b9b83f8"><p data-path-to-node="6,1,0"><strong data-path-to-node="6,1,0" data-index-in-node="0">Input monitoring:</strong> You cannot enable Input Monitoring directly on a multi-output track. Instead, you must enable it on the <strong data-path-to-node="6,1,0" data-index-in-node="122">main</strong> instrument track.</p></li>
+<li data-list-item-id="e33e5723abf906251951eb3775df6d5b6"><p data-path-to-node="6,1,0"><strong>Manage tracks in the multi-output mixer:</strong> You can manage the multi-output track layout directly within the multi-out mixer to quickly reorder or delete specific outputs.</p></li>
+</ul><h2 id="h_01KDRGGPJJRMX1HNVSWSCY0JKB">Multi-output track operations</h2><ul data-path-to-node="6">
+<li data-list-item-id="e2eaecbc888b44b8a09942ca290598262">To rename a channel within a plug-in, double-click the channel name, or right-click / Control-click the channel name, then choose Rename. Type a new name and any comments, then press Return, or click the X to close the dialog.<br><img class="wysiwyg-image-resized" style="aspect-ratio: 486/390; width: 40%;" src="/hc/article_attachments/45267289063956" width="486" height="390">
+</li>
+<li data-list-item-id="e06f6688ed68c12786772fa847a8ef1a2">To delete a channel, right-click or Control-click the channel name, then choose Delete.<br><br><img class="wysiwyg-image-resized" style="aspect-ratio: 362/296; width: 40%;" src="/hc/article_attachments/45267275287316" width="362" height="296">
+</li>
+<li data-list-item-id="e44f654b0d7e65e2a4e662a5bb5f9984c">To reorder within the plug-in view, click and drag a channel.<br><img class="wysiwyg-image-resized" style="aspect-ratio: 582/348; width: 50%;" src="/hc/article_attachments/45267275289492" width="582" height="348">
+</li>
+</ul><hr><h1 id="h_01J6ZQTXY2TPP6NR4KJNZY7HCK">Working with Multiple MIDI Channels in a Multi-Out Instrument</h1><p><span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px;">In the multi-out mixer, you can independently assign the MIDI input and MIDI output for each channel of an instrument. This allows you to use a multi-timbral instrument like Native Instruments' Kontakt, for example, with a single plug-in instance, while sending independent MIDI to each loaded patch, and recording MIDI for each loaded patch to independent tracks. You can configure a MIDI Input and MIDI Output for each channel, </span></p><ul>
+<li data-list-item-id="e431677a2e19846617d9db578856e4552">
+<strong>MIDI IN:</strong> The MIDI Input determines what MIDI input channel sends MIDI to the channel. You might assign different MIDI IN channels if, for example, you are recording multi-timbral parts with different MIDI controllers or a multi-timbral controller. If you are recording each MIDI track separately, you can assign the same MIDI input for each channel, or leave the default All setting. </li>
+<li data-list-item-id="e2676c2b4024134063d355118b8547f08">
+<strong>MIDI OUT:</strong> The MIDI Output specifies the MIDI channel in the plug-in to which MIDI from the channel (track) is routed. You can use MIDI OUT to record MIDI on multiple channels (multiple LUNA tracks) of a multi-out plug-in, then route that MIDI to the correct part in the multi-out plug-in. This is useful with multi-out, multi-timbral plug-ins, like Kontakt or other samplers or synths. </li>
+</ul><h2 id="h_01J6ZQTXY2ZXB2Y6TE2ND0W6A0">To assign MIDI inputs and outputs in the multi-out mixer within a plug-in</h2><ol>
+<li data-list-item-id="e95b61f97c02dac53d2c619ab827bd047">With the multi-out mixer displayed, display the MIDI options by clicking the icon below the plus symbol.<br><br> <img class="wysiwyg-image-resized" style="aspect-ratio: 1016/480; width: 100%;" src="/hc/article_attachments/45267275291540" width="1016" height="480">
+</li>
+<li data-list-item-id="eef2b415b476b9f35c6ba12769091b8b6">To select a MIDI input for a channel, click the MIDI IN button. In the MIDI IN browser, select the MIDI channel.</li>
+<li data-list-item-id="e47ecba72fdc3c5bbd532a6ce90c9ed6d">To select a MIDI output for a channel,In the MIDI OUT browser, select the MIDI channel. Usually, this is listed under the name of the track (e.g. INSTRUMENT). You may have to scroll down to find the MIDI Output channels for the instrument. </li>
+</ol><p><strong>Tip: </strong>You can assign MIDI Output channels automatically when you create your multi-out channels. To do this, make sure CASCADE MIDI OUTPUT is highlighted when creating multiple output channels. </p><h2 id="h_01J6ZQTXY2TH7W6TZWEXMTKKHK">Multi-out mixer and multi-timbral plug-in example</h2><p>In the following examples, we use the Kontakt instrument, but every multi-timbral instrument has its own configuration. Refer to your instrument's documentation for specific information.</p><ol>
+<li data-list-item-id="ecb37978330c32f02b45630fc027a65cd">Add a Kontakt plug-in to an instrument track in LUNA. </li>
+<li data-list-item-id="edd4b3e93d2549b8ea83d48d8cb91ee09">In Kontakt, assign the patches you want to include in your multi-out instrument.<br><img src="/hc/article_attachments/45267275292180" width="1320" height="726"><br> </li>
+<li data-list-item-id="ec5846a245b27fce7efdf1178530877b1">If Outputs are not shown, from the Kontakt Workspace Management menu, select Outputs.<br><img src="/hc/article_attachments/45267289075220" width="1078" height="584"><br> </li>
+<li data-list-item-id="e0c8731d53a0ef8163065a90252fda54f">Next to Outputs, click Presets / Batch Configuration. From the menu, choose Batch functions, then choose Clear output section and create one individual channel for each loaded instrument.<br><br> <img src="/hc/article_attachments/45267289077140" width="1600" height="699">
+</li>
+<li data-list-item-id="edfd224365249d3ca8621c06f04752b6b">Kontakt assigns each loaded instrument patch to a separate output pair. </li>
+<li data-list-item-id="ebd807a918f9bad2a9107f40fbf1d53ea">Follow the instructions in <a href="#h_01J6ZQTXY2HZMFRKJ127Y1YJVC">Adding multiple output channels from within a plug-in</a> to add the instrument channels in LUNA. </li>
+</ol><p class="wysiwyg-text-align-center"> </p><figure class="wysiwyg-image"><img style="aspect-ratio: 1600/1561;" src="/hc/article_attachments/45267289078932" width="1600" height="1561"></figure><p class="wysiwyg-text-align-center"><em>Kontakt configured for multi-channel output</em></p><p> </p><p class="wysiwyg-text-align-center"><img src="/hc/article_attachments/42460817230228" alt="multi-out-kontakt-timeline.png" width="520" height="439"></p><p class="wysiwyg-text-align-center"><em>Kontakt multi-channel tracks with MIDI in the LUNA timeline</em></p><p class="wysiwyg-text-align-center"> </p><p><span class="wysiwyg-font-size-small"><em>251230</em></span></p>
+          </div>
+          
+          
+
+          <div data-prevnext></div>
+        </article>
+
+        
+
+        
+
+        
+      </div>
+      <div class="lt-article-container__column lt-article-container__toc lt-d-print-none">
+        <div data-toc='{"mobileBreakpoint": 991}'></div>
+      </div>
+      
+      <div class="lt-article-container__column lt-article-container__sidebar lt-d-print-none">
+        
+          <section class="lt-section-articles">
+            <h3 class="lt-section-articles__title">Articles in this section</h3>
+            <ul class="lt-section-articles__list">
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/360041939071-About-the-LUNA-Manual"
+                    class="lt-section-articles__link ">About the LUNA Manual</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/360041758592-Download-LUNA-Manual"
+                    class="lt-section-articles__link ">Download LUNA Manual</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/360041507272-About-LUNA-Application"
+                    class="lt-section-articles__link ">About LUNA Application</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/360041866251-LUNA-Concepts"
+                    class="lt-section-articles__link ">LUNA Concepts</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/360041482092-Getting-Started-with-LUNA"
+                    class="lt-section-articles__link ">Getting Started with LUNA</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/360041440592-Using-LUNA"
+                    class="lt-section-articles__link ">Using LUNA</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/44376645611156-Using-LUNA-Browsers"
+                    class="lt-section-articles__link ">Using LUNA Browsers</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/26793892701460-Using-LUNA-in-Windows"
+                    class="lt-section-articles__link ">Using LUNA in Windows</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/13210238444948-Using-LUNA-with-Core-Audio"
+                    class="lt-section-articles__link ">Using LUNA with Core Audio</a>
+                </li>
+              
+                <li class="lt-section-articles__item">
+                  <a href="/hc/en-us/articles/44409566769684-Creating-Tracks"
+                    class="lt-section-articles__link ">Creating Tracks</a>
+                </li>
+              
+            </ul>
+            
+              <a href="/hc/en-us/sections/360008484871-LUNA-Application-Manual"
+                class="lt-btn lt-btn--default">See more</a>
+            
+          </section>
+        
+        
+          <div class="lt-article-boxes lt-mb-4">
+            
+            
+            
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+  </main>
+
+  </div>
+  
+    <div id="shopify-section-footer" class="custom-footer shopify-section mod_footer_jwX0la_Footer js-footer">
+      <footer class="mod_footer_jwX0la_Footer_container" role="contentinfo">
+        <!-- Top part -->
+        <div class="mod_footer_jwX0la_Footer_top">
+          <!-- Logo -->
+          <div class="mod_footer_jwX0la_Footer_logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 66" fill="none">
+              <path d="M3.30664 55.7484H4.28048V61.8547C4.28048 63.7234 4.41209 64.592 5.70177 64.592C6.99146 64.592 7.12306 63.6971 7.12306 61.8547V55.7484H8.0969V61.9336C8.0969 63.197 8.07058 64.0656 7.59682 64.6446C7.20202 65.1447 6.51769 65.4605 5.70177 65.4605C4.85953 65.4605 4.20152 65.1447 3.80672 64.6446C3.33296 64.0392 3.30664 63.1707 3.30664 61.9336V55.7484Z" fill="white"></path>
+              <path d="M11.2025 56.4854V65.2763H10.334V55.7484H11.7553L13.7293 61.144C14.0188 61.9336 14.282 62.7232 14.5189 63.5128C14.4399 62.6969 14.4399 61.9863 14.4399 61.4336V55.7484H15.3085V65.2763H14.3346L11.9395 58.6963C11.6237 57.9067 11.3868 57.1697 11.2025 56.4854Z" fill="white"></path>
+              <path d="M18.5461 55.7484H17.5723V65.2763H18.5461V55.7484Z" fill="white"></path>
+              <path d="M20.0195 55.7484H20.9934L22.4147 62.2495C22.4936 62.5916 22.5726 63.0917 22.6515 63.7497C22.7305 63.276 22.8095 62.7759 22.9411 62.2232L24.3623 55.7747H25.3099L23.1253 65.3026H22.2041L20.0195 55.7484Z" fill="white"></path>
+              <path d="M27.0215 55.7484H31.3117V56.6433H27.9953V59.9333H30.4168V60.8019H27.9953V64.4077H31.4169V65.3026H27.0215V55.7484Z" fill="white"></path>
+              <path d="M33.3115 55.7484H35.0486C37.1016 55.7484 38.1281 56.5643 38.1281 58.2488C38.1281 59.4069 37.6017 60.2228 36.6278 60.5387L38.1807 65.2763H37.1279L35.6803 60.7492C35.3381 60.7756 34.996 60.7756 34.6538 60.7756H34.259V65.2763H33.2852L33.3115 55.7484ZM35.1012 59.9333C36.4173 59.9333 37.0753 59.3806 37.0753 58.2751C37.0753 57.1434 36.4173 56.617 35.1012 56.617H34.259V59.9333H35.1012Z" fill="white"></path>
+              <path d="M40.2864 62.7495C40.3654 63.9866 40.8392 64.5919 41.813 64.5919C42.6552 64.5919 43.208 63.9603 43.208 63.0127C43.208 61.9862 42.5236 61.3809 41.3656 60.5123C40.1812 59.6438 39.5232 59.0121 39.5232 57.7224C39.5232 56.5117 40.418 55.5641 41.6288 55.5641C43.05 55.5641 43.9186 56.5117 43.9713 58.1435H43.05C42.9711 56.9591 42.4973 56.3801 41.6551 56.3801C40.8655 56.3801 40.3654 56.9065 40.3654 57.7224C40.3654 58.1435 40.5496 58.5383 40.8392 58.8542C41.3392 59.3806 41.9972 59.8017 42.6289 60.3018C43.6554 61.1177 44.1292 61.881 44.1292 62.9864C44.1292 64.513 43.1816 65.4868 41.7867 65.4868C40.2864 65.4868 39.3916 64.513 39.3652 62.7759L40.2864 62.7495Z" fill="white"></path>
+              <path d="M47.6555 55.7484H48.9978L51.0771 65.2763H50.0506L49.4979 62.46H47.1027L46.55 65.2763H45.5762L47.6555 55.7484ZM49.2873 61.5915L48.2871 56.617L47.287 61.5915H49.2873Z" fill="white"></path>
+              <path d="M52.9199 55.7484H53.8938V64.3814H56.8943V65.3026H52.9199V55.7484Z" fill="white"></path>
+              <path d="M62.0793 55.7484H63.4216L65.5009 65.2763H64.4744L63.9217 62.46H61.5266L60.9738 65.2763H60L62.0793 55.7484ZM63.7111 61.5915L62.711 56.617L61.7108 61.5915H63.7111Z" fill="white"></path>
+              <path d="M67.002 55.7484H67.9758V61.8546C67.9758 63.7233 68.1074 64.5919 69.3971 64.5919C70.6868 64.5919 70.8184 63.697 70.8184 61.8546V55.7484H71.7922V61.9336C71.7922 63.1969 71.7396 64.0655 71.2921 64.6445C70.8973 65.1446 70.213 65.4605 69.3971 65.4605C68.5548 65.4605 67.8968 65.1446 67.502 64.6445C67.0283 64.0392 67.002 63.1706 67.002 61.9336V55.7484Z" fill="white"></path>
+              <path d="M73.793 55.7484H75.5564C77.8199 55.7484 78.7148 57.2223 78.7148 60.486C78.7148 63.776 77.8199 65.2762 75.5564 65.2762H73.793V55.7484ZM74.7668 64.3813C74.951 64.4077 75.1353 64.4077 75.2932 64.4077C77.1883 64.4077 77.741 63.2759 77.741 60.4596C77.741 57.6697 77.1883 56.5643 75.3195 56.5643C75.1353 56.5643 74.951 56.5906 74.7668 56.5906V64.3813Z" fill="white"></path>
+              <path d="M81.6613 55.7484H80.6875V65.2762H81.6613V55.7484Z" fill="white"></path>
+              <path d="M83.373 60.5123C83.373 57.2223 84.2943 55.5641 86.0051 55.5641C87.7159 55.5641 88.6371 57.2223 88.6371 60.5123C88.6371 63.8023 87.7159 65.4605 86.0051 65.4605C84.2679 65.4868 83.373 63.8023 83.373 60.5123ZM84.3995 60.3018C84.3995 63.197 84.8207 64.5919 86.0051 64.5919C87.1631 64.5919 87.6106 63.2496 87.6106 60.5386C87.6106 57.8014 87.1368 56.4854 86.0051 56.4854C84.8733 56.459 84.3995 57.7224 84.3995 60.3018Z" fill="white"></path>
+              <path d="M55.2918 36.2189V35.8241V29.3757L74.9793 28.4282L74.874 27.0595H55.3182V15.0839C55.3182 11.7676 52.6335 9.05658 49.2909 9.05658C45.9745 9.05658 43.2636 11.7412 43.2636 15.0839V20.9269V20.9796V27.0858H42.1055L39.8946 30.139L43.2636 29.9811V35.403C43.2636 37.3244 41.7107 38.8773 39.763 38.9036C37.8416 38.9036 36.2887 37.3507 36.2624 35.403L36.2887 18.216V17.9528C36.2887 17.9528 36.3677 15.6366 35.0254 14.4522C33.2356 12.8993 29.5508 13.7942 29.5508 13.7942C34.1305 13.8205 33.7357 17.7422 33.7357 17.7422V18.216V35.403C33.7357 38.7193 36.4203 41.4303 39.763 41.4303C43.0793 41.4303 45.7903 38.7457 45.7903 35.403V29.8495L52.7914 29.5073V35.8504V36.0347C52.7914 36.0347 52.6598 38.3509 54.0022 39.5353C55.7919 41.0881 59.4767 40.1933 59.4767 40.1933C55.1076 40.2196 55.2918 36.2189 55.2918 36.2189ZM45.7903 27.0595V21.1112V21.0585V15.0839C45.7903 13.1625 47.3432 11.6096 49.2909 11.5833C51.2122 11.5833 52.7651 13.1362 52.7914 15.0839L52.8177 27.0595H45.7903Z" fill="white"></path>
+              <path d="M6.73026 26.112L45.9999 3.34511L85.2694 26.112L45.9999 48.8789L6.73026 26.112ZM90.2966 26.112L45.9999 0.423584L1.70312 26.112L45.9999 51.8004L90.2966 26.112Z" fill="white"></path>
+            </svg></div>
+
+          <!-- Navigation -->
+
+          <div class="mod_footer_jwX0la_Footer_navDiv">
+            <p class="mod_footer_jwX0la_Footer_label js-footer-title" title="footer-shop">
+              <span>Shop</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 8" fill="none">
+                <path d="M0.942916 0.941184L1.8841 -5.75961e-07L8.00173 6.11763L14.1194 -4.11405e-08L15.0605 0.941185L8.00173 8L0.942916 0.941184Z" fill="white"></path>
+              </svg>
+            </p>
+            <ul class="mod_footer_jwX0la_Footer_list js-footer-list" title="footer-shop">
+              <li>
+                <a href="https://www.uaudio.com/collections/uad-plugins" class="o-link o-link--reversed">
+                  UAD Plug-Ins
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/custom-bundles" class="o-link o-link--reversed">
+                  Custom Bundles
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/apollo" class="o-link o-link--reversed">
+                 Apollo
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/volt" class="o-link o-link--reversed">
+                  Volt
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/microphones" class="o-link o-link--reversed">
+                  Microphones
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/uafx-pedals" class="o-link o-link--reversed">
+                  Guitar Pedals
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/find-a-dealer" class="o-link o-link--reversed">
+                  Find a Dealer
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mod_footer_jwX0la_Footer_navDiv">
+            <p class="mod_footer_jwX0la_Footer_label js-footer-title" title="footer-explore">
+              <span>Explore</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 8" fill="none">
+                <path d="M0.942916 0.941184L1.8841 -5.75961e-07L8.00173 6.11763L14.1194 -4.11405e-08L15.0605 0.941185L8.00173 8L0.942916 0.941184Z" fill="white"></path>
+              </svg>
+            </p>
+            <ul class="mod_footer_jwX0la_Footer_list js-footer-list" title="footer-explore">
+              <li>
+                <a href="https://www.uaudio.com/pages/about" class="o-link o-link--reversed">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/careers" class="o-link o-link--reversed">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/ua-giving" class="o-link o-link--reversed">
+                 UA Giving
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/blogs/press" class="o-link o-link--reversed">
+                  Press
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/legal-documents" class="o-link o-link--reversed">
+                  Legal
+                </a>
+              </li>
+              <li>
+                <a href="https://www.uaudio.com/pages/accessibility" class="o-link o-link--reversed">
+                  Accessibility
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mod_footer_jwX0la_Footer_navDiv">
+            <p class="mod_footer_jwX0la_Footer_label js-footer-title" title="footer-connect">
+              <span>Connect</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 8" fill="none">
+                <path d="M0.942916 0.941184L1.8841 -5.75961e-07L8.00173 6.11763L14.1194 -4.11405e-08L15.0605 0.941185L8.00173 8L0.942916 0.941184Z" fill="white"></path>
+              </svg>
+            </p>
+            <ul class="mod_footer_jwX0la_Footer_list js-footer-list" title="footer-connect">
+              <li>
+                <a href="https://www.uaudio.com/pages/contact-us" class="o-link o-link--reversed">
+                  Contact Us
+                </a>
+              </li>
+              <li>
+                <a href="https://help.uaudio.com" class="o-link o-link--reversed">
+                  Get Support
+                </a>
+              </li>
+              <li>
+                <a href="https://uadforum.com/community/index.php" class="o-link o-link--reversed">
+                  UAD Forum
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="mod_footer_jwX0la_Footer_newsletter">
+            <p class="mod_footer_jwX0la_Footer_newsletter_label">Subscribe and save</p>
+
+            
+            <a href="https://www.uaudio.com/newsletter-sign-up" class="lt-btn lt-btn--primary lt-btn--footer">
+              Sign up for the UA Newsletter
+            </a>
+          </div>
+        </div>
+
+        <!-- Middle part -->
+        <div class="mod_footer_jwX0la_Footer_middle">
+        </div>
+
+        <!-- Bottom part -->
+        <div class="mod_footer_jwX0la_Footer_bottom">
+          <!-- social media-->
+          <div class="mod_footer_jwX0la_Footer_socialMedia">
+            <a href="https://www.youtube.com/user/UniversalAudio/featured" class="mod_footer_jwX0la_Footer_icon mod_footer_jwX0la_Footer_youtube" aria-label="Universal Audio Youtube link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 19" fill="none">
+                <path d="M23.9844 3.64625C23.845 3.12829 23.572 2.65602 23.1927 2.27673C22.8134 1.89744 22.3411 1.62442 21.8232 1.485C19.9157 0.96875 12.2507 0.96875 12.2507 0.96875C12.2507 0.96875 4.58566 0.96875 2.67816 1.485C2.16019 1.62442 1.68793 1.89744 1.30864 2.27673C0.929346 2.65602 0.656328 3.12829 0.516908 3.64625C0.160736 5.59161 -0.0121052 7.5661 0.000658381 9.54375C-0.0121052 11.5214 0.160736 13.4959 0.516908 15.4413C0.656328 15.9592 0.929346 16.4315 1.30864 16.8108C1.68793 17.1901 2.16019 17.4631 2.67816 17.6025C4.58566 18.1187 12.2507 18.1187 12.2507 18.1187C12.2507 18.1187 19.9157 18.1187 21.8232 17.6025C22.3411 17.4631 22.8134 17.1901 23.1927 16.8108C23.572 16.4315 23.845 15.9592 23.9844 15.4413C24.3406 13.4959 24.5134 11.5214 24.5007 9.54375C24.5134 7.5661 24.3406 5.59161 23.9844 3.64625ZM9.80066 13.2188V5.86875L16.1619 9.54375L9.80066 13.2188Z" fill="currentColor"></path>
+              </svg>
+            </a>
+
+            <a href="https://www.instagram.com/uaudio/" class="mod_footer_jwX0la_Footer_icon mod_footer_jwX0la_Footer_instagram" aria-label="Universal Audio Instagram link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                <path d="M7.0987 0.301758H16.8987C20.632 0.301758 23.6654 3.33509 23.6654 7.06842V16.8684C23.6654 18.6631 22.9524 20.3842 21.6835 21.6532C20.4145 22.9222 18.6933 23.6351 16.8987 23.6351H7.0987C3.36536 23.6351 0.332031 20.6018 0.332031 16.8684V7.06842C0.332031 5.27379 1.04495 3.55266 2.31394 2.28367C3.58294 1.01467 5.30407 0.301758 7.0987 0.301758ZM6.86536 2.63509C5.75145 2.63509 4.68317 3.07759 3.89552 3.86524C3.10786 4.6529 2.66536 5.72118 2.66536 6.83509V17.1018C2.66536 19.4234 4.5437 21.3018 6.86536 21.3018H17.132C18.2459 21.3018 19.3142 20.8593 20.1019 20.0716C20.8895 19.284 21.332 18.2157 21.332 17.1018V6.83509C21.332 4.51342 19.4537 2.63509 17.132 2.63509H6.86536ZM18.1237 4.38509C18.5105 4.38509 18.8814 4.53874 19.1549 4.81223C19.4284 5.08572 19.582 5.45665 19.582 5.84342C19.582 6.2302 19.4284 6.60113 19.1549 6.87462C18.8814 7.14811 18.5105 7.30176 18.1237 7.30176C17.7369 7.30176 17.366 7.14811 17.0925 6.87462C16.819 6.60113 16.6654 6.2302 16.6654 5.84342C16.6654 5.45665 16.819 5.08572 17.0925 4.81223C17.366 4.53874 17.7369 4.38509 18.1237 4.38509ZM11.9987 6.13509C13.5458 6.13509 15.0295 6.74967 16.1235 7.84363C17.2174 8.9376 17.832 10.4213 17.832 11.9684C17.832 13.5155 17.2174 14.9993 16.1235 16.0932C15.0295 17.1872 13.5458 17.8018 11.9987 17.8018C10.4516 17.8018 8.96787 17.1872 7.87391 16.0932C6.77995 14.9993 6.16536 13.5155 6.16536 11.9684C6.16536 10.4213 6.77995 8.9376 7.87391 7.84363C8.96787 6.74967 10.4516 6.13509 11.9987 6.13509ZM11.9987 8.46842C11.0704 8.46842 10.1802 8.83717 9.52382 9.49355C8.86745 10.1499 8.4987 11.0402 8.4987 11.9684C8.4987 12.8967 8.86745 13.7869 9.52382 14.4433C10.1802 15.0997 11.0704 15.4684 11.9987 15.4684C12.927 15.4684 13.8172 15.0997 14.4736 14.4433C15.1299 13.7869 15.4987 12.8967 15.4987 11.9684C15.4987 11.0402 15.1299 10.1499 14.4736 9.49355C13.8172 8.83717 12.927 8.46842 11.9987 8.46842Z" fill="currentColor"></path>
+              </svg></a>
+
+            <a href="https://twitter.com/UAudio" class="mod_footer_jwX0la_Footer_icon mod_footer_jwX0la_Footer_twitter" aria-label="Universal Audio Twitter link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 21" fill="none">
+                <path d="M25.2035 2.96908C24.3052 3.37741 23.3369 3.64574 22.3335 3.77408C23.3602 3.15574 24.1535 2.17574 24.5269 0.997409C23.5585 1.58074 22.4852 1.98908 21.3535 2.22241C20.4319 1.21908 19.1369 0.635742 17.6669 0.635742C14.9252 0.635742 12.6852 2.87574 12.6852 5.64074C12.6852 6.03741 12.7319 6.42241 12.8135 6.78408C8.66021 6.57408 4.96187 4.57908 2.50021 1.55741C2.06854 2.29241 1.82354 3.15574 1.82354 4.06574C1.82354 5.80408 2.69854 7.34408 4.05187 8.21908C3.22354 8.21908 2.45354 7.98574 1.77688 7.63574V7.67074C1.77688 10.0974 3.50354 12.1274 5.79021 12.5824C5.05606 12.7833 4.28532 12.8113 3.53854 12.6641C3.85542 13.6586 4.476 14.5289 5.31306 15.1525C6.15012 15.7761 7.16156 16.1217 8.20521 16.1407C6.43611 17.5413 4.2432 18.2983 1.98687 18.2874C1.59021 18.2874 1.19354 18.2641 0.796875 18.2174C3.01354 19.6407 5.65021 20.4691 8.47354 20.4691C17.6669 20.4691 22.7185 12.8391 22.7185 6.22408C22.7185 6.00241 22.7185 5.79241 22.7069 5.57074C23.6869 4.87074 24.5269 3.98408 25.2035 2.96908Z" fill="currentColor"></path>
+              </svg></a>
+
+            <a href="https://www.facebook.com/universalaudioinc/timeline/" class="mod_footer_jwX0la_Footer_icon mod_footer_jwX0la_Footer_facebook" aria-label="Universal Audio Facebook link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 24" fill="none">
+                <path d="M8.33463 13.7184H11.2513L12.418 9.05176H8.33463V6.71842C8.33463 5.51676 8.33463 4.38509 10.668 4.38509H12.418V0.465091C12.0376 0.414925 10.6015 0.301758 9.0848 0.301758C5.9173 0.301758 3.66797 2.23492 3.66797 5.78509V9.05176H0.167969V13.7184H3.66797V23.6351H8.33463V13.7184Z" fill="currentColor"></path>
+              </svg></a>
+          </div>
+
+          <!-- payment methods -->
+          <div class="mod_footer_jwX0la_Footer_payments">
+            <div class="mod_footer_jwX0la_Footer_paymentIcon mod_footer_jwX0la_Footer_visa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 14" fill="none">
+                <path d="M15.5705 0.73879L10.3338 13.2321H6.91712L4.34046 3.26046C4.18379 2.64712 4.04879 2.42212 3.57212 2.16379C2.79546 1.74212 1.51212 1.34712 0.383789 1.10046L0.460456 0.73879H5.96046C6.31987 0.738429 6.66757 0.866564 6.9408 1.10006C7.21403 1.33356 7.39479 1.65705 7.45046 2.01212L8.81212 9.24212L12.1755 0.73879H15.5705ZM28.9588 9.15379C28.9721 5.85546 24.3988 5.67379 24.4305 4.20046C24.4405 3.75212 24.8671 3.27546 25.8005 3.15379C26.8943 3.04991 27.9958 3.24339 28.9888 3.71379L29.5555 1.06379C28.5887 0.700365 27.5649 0.512417 26.5321 0.508789C23.3371 0.508789 21.0888 2.20879 21.0688 4.64046C21.0488 6.43879 22.6738 7.44046 23.8988 8.04046C25.1588 8.65212 25.5821 9.04546 25.5755 9.59212C25.5671 10.4321 24.5721 10.8005 23.6421 10.8155C22.0171 10.8405 21.0755 10.3771 20.3221 10.0271L19.7371 12.7638C20.4921 13.1105 21.8855 13.4138 23.3305 13.4271C26.7255 13.4271 28.9471 11.7505 28.9588 9.15379ZM37.3938 13.2321H40.3838L37.7755 0.73879H35.0155C34.7206 0.736057 34.4316 0.821987 34.1862 0.985437C33.9407 1.14889 33.75 1.38232 33.6388 1.65546L28.7905 13.2321H32.1838L32.8588 11.3655H37.0055L37.3938 13.2321ZM33.7888 8.80546L35.4888 4.11379L36.4688 8.80546H33.7888ZM20.1888 0.73879L17.5171 13.2321H14.2838L16.9588 0.73879H20.1888Z" fill="currentColor"></path>
+              </svg></div>
+            <div class="mod_footer_jwX0la_Footer_paymentIcon mod_footer_jwX0la_Footer_mastercard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 15" fill="none">
+                <path d="M7.38379 14.9688C11.2498 14.9688 14.3838 11.8347 14.3838 7.96875C14.3838 4.10276 11.2498 0.96875 7.38379 0.96875C3.5178 0.96875 0.383789 4.10276 0.383789 7.96875C0.383789 11.8347 3.5178 14.9688 7.38379 14.9688Z" fill="currentColor"></path>
+                <path opacity="0.5" d="M17.3838 14.9688C21.2498 14.9688 24.3838 11.8347 24.3838 7.96875C24.3838 4.10276 21.2498 0.96875 17.3838 0.96875C13.5178 0.96875 10.3838 4.10276 10.3838 7.96875C10.3838 11.8347 13.5178 14.9688 17.3838 14.9688Z" fill="currentColor"></path>
+              </svg></div>
+            
+  
+</div>
+
+<button class="lt-scroll-to-top fa fa-angle-up lt-d-print-none lt-p-0 lt-d-none lt-d-md-flex lt-justify-content-center lt-align-items-center" data-scroll-to-top>
+  <div class="sr-only">Return to top</div>
+</button>
+
+
+
+<div 
+  class="lt-backdrop"
+  x-data=""
+  x-bind:class="{'is-active': $store.mobileMenu.isOpen}"
+  x-on:click="$store.mobileMenu.isOpen = false">
+</div>
+
+<div hidden data-popular-searches>
+  
+    installation, branding, customization
+  
+</div>
+<script src="/hc/theming_assets/01HZJHYYZ5S4NYH7JXK0N4AYV4"></script>
+<script src="/hc/theming_assets/01HZJHYYRFBPAKVXSGWM9S83H9"></script>
+<script src="/hc/theming_assets/01HZJHYYSWZ6C52WQ333KFQFR9"></script>
+<script src="/hc/theming_assets/01HZJHYZ0MPTTHZKBEJHFCCGVQ"></script>
+
+<script>
+  $(document).ready(function() {
+    const $accordions = $('.mod_footer_jwX0la_Footer_navDiv');
+    
+    $accordions.each(function() {
+      const $toggle = $(this).find('p');
+      const $content = $(this).find('ul');
+
+      $toggle.on('click', function() {
+        $content.slideToggle();
+      });
+    });
+  });
+</script>
+
+
+
+  <!-- / -->
+
+  
+  <script src="//static.zdassets.com/hc/assets/en-us.02b443b9c55b82e01396.js"></script>
+  
+
+  <script type="text/javascript">
+  /*
+
+    Greetings sourcecode lurker!
+
+    This is for internal Zendesk and legacy usage,
+    we don't support or guarantee any of these values
+    so please don't build stuff on top of them.
+
+  */
+
+  HelpCenter = {};
+  HelpCenter.account = {"subdomain":"universalaudioinc","environment":"production","name":"Universal Audio"};
+  HelpCenter.user = {"identifier":"da39a3ee5e6b4b0d3255bfef95601890afd80709","email":null,"name":"","role":"anonymous","avatar_url":"https://assets.zendesk.com/hc/assets/default_avatar.png","is_admin":false,"organizations":[],"groups":[]};
+  HelpCenter.internal = {"asset_url":"//static.zdassets.com/hc/assets/","web_widget_asset_composer_url":"https://static.zdassets.com/ekr/snippet.js","current_session":{"locale":"en-us","csrf_token":null,"shared_csrf_token":null},"usage_tracking":{"event":"article_viewed","data":"BAh7CDoLbG9jYWxlSSIKZW4tdXMGOgZFVDoPYXJ0aWNsZV9pZGwrCBSlpY1dGzoKX21ldGF7DDoPYWNjb3VudF9pZGkDR4EJOhNoZWxwX2NlbnRlcl9pZGkETb7tCzoNYnJhbmRfaWRpA4XLAzoMdXNlcl9pZDA6E3VzZXJfcm9sZV9uYW1lSSIOQU5PTllNT1VTBjsGVDsASSIKZW4tdXMGOwZUOhphbm9ueW1vdXNfdHJhY2tpbmdfaWQw--621a9064079e56ca2df22887078cb9a00b895760","url":"https://help.uaudio.com/hc/activity"},"current_record_id":"30088622351636","current_record_url":"/hc/en-us/articles/30088622351636-Using-Multi-Output-Plug-Ins-in-LUNA","current_record_title":"Using Multi-Output Plug-Ins in LUNA","current_text_direction":"ltr","current_brand_id":248709,"current_brand_name":"Universal Audio","current_brand_url":"https://universalaudioinc.zendesk.com","current_brand_active":true,"current_path":"/hc/en-us/articles/30088622351636-Using-Multi-Output-Plug-Ins-in-LUNA","show_autocomplete_breadcrumbs":true,"user_info_changing_enabled":false,"has_user_profiles_enabled":false,"has_end_user_attachments":true,"user_aliases_enabled":false,"has_anonymous_kb_voting":false,"has_multi_language_help_center":true,"show_at_mentions":false,"embeddables_config":{"embeddables_web_widget":true,"embeddables_help_center_auth_enabled":false,"embeddables_connect_ipms":false},"answer_bot_subdomain":"static","gather_plan_state":"subscribed","has_article_verification":true,"has_gather":true,"has_ckeditor":false,"has_community_enabled":false,"has_community_badges":true,"has_community_post_content_tagging":false,"has_gather_content_tags":true,"has_guide_content_tags":true,"has_user_segments":true,"has_answer_bot_web_form_enabled":false,"has_garden_modals":false,"theming_cookie_key":"hc-da39a3ee5e6b4b0d3255bfef95601890afd80709-2-preview","is_preview":false,"has_search_settings_in_plan":true,"theming_api_version":2,"theming_settings":{"toggle_translations":false,"body_bg":"#f6f3ed","color_bg_secondary":"#fff","brand_primary":"#191919","brand_primary_inverse":"#fff","text_color":"rgba(25, 25, 25, 1)","link_color":"rgba(25, 25, 25, 1)","button_color":"#191919","border_color":"rgba(196, 196, 196, 1)","block_bg":"#f2f4fa","block_hover_bg":"#ff6f48","brand_info":"#1B50F7","brand_success":"#05BB0C","brand_warning":"#DB8709","brand_danger":"#C70606","font_size_base":"16px","heading_font":"'Helvetica Now Display', sans-serif","heading_font_weight":"700","font_family_base":"'Helvetica Now Display', sans-serif","line_height_base":"1.5","logo":"/hc/theming_assets/01HZJHZ3X55QYCVX583Z1XRX3A","logo_height":"50px","favicon":"/hc/theming_assets/01J023JG6A3P3E0E2FWNDG2C3C","border_radius_base":"8px","border_radius_lg":"16px","border_width":"1px","topbar_bg":"#f6f3ed","topbar_text_color":"#191919","topbar_link_color":"#191919","topbar_button_color":"#191919","show_help_center_name":false,"help_center_name":"Help Center","show_category_menu":false,"show_sign_in":true,"show_submit_a_request":true,"topbar_link_1_toggle":false,"topbar_link_1_title":"Link 1","topbar_link_1_url":"#link1","topbar_link_2_toggle":false,"topbar_link_2_title":"Link 2","topbar_link_2_url":"#link2","topbar_link_3_toggle":false,"topbar_link_3_title":"Link 3","topbar_link_3_url":"#link3","product_ids":"25493960658196, 25494032900116, 25494413039508, 25495792267028, 4405283495060, 25496127324436, 25496201266836, 25496242357396","products_title":"Browse by Product","topic_ids":"25496305102996, 25496334976788, 25496363838100, 25496366516628, 25496430020372, 25496454726164, 200850443, 12261923971860","topics_title":"Browse by Topic","footer_bg":"rgba(246, 243, 237, 1)","footer_text_color":"rgba(25, 25, 25, 1)","footer_link_color":"rgba(255, 255, 255, 1)","footer_social_link_color":"#fff","toggle_footer_creator_text":false,"footer_social_icon_height":"1.5rem","toggle_custom_header":true,"toggle_custom_footer":true,"toggle_products":true,"toggle_topics":true,"toggle_bottom_cta":true,"categories_per_line":2,"promoted_articles_per_line":4,"hero_homepage_image":"/hc/theming_assets/01HZJHZ4R8NK9TJEEZC3EBZ7JA","hero_button_bg":"#5aca93","hero_title":"How can we help?","search_placeholder":"Search...","show_hero_unit_button":false,"show_popular_searches":false,"popular_searches_label":"Popular","popular_searches_keywords":"installation, branding, customization","info_block_title":"Information","info_block_text":"COVID-19 might have sent us home, but we are still there for you via email and chat. Delivery info COVID-19 Your parcel will arrive on time. All orders can be processed normally. The highest hygiene standards apply in our warehouse as well as at delivery. This also applies to your package and the products you order.","bottom_cta_bg":"#f6f3ed","bottom_cta_title_color":"#000","bottom_cta_subtitle_color":"#000","bottom_cta_button_color":"#000","bottom_cta_title":"Can't find what you're looking for?","bottom_cta_subtitle":"","contact_boxes_title":"More Resources","contact_boxes_per_line":4,"contact_boxes_icon_size":"2rem","contact_box_1_toggle":true,"contact_box_1_link_toggle":false,"contact_box_1_url":"#","contact_box_1_icon":"/hc/theming_assets/01HZJHZ52DPJCZ5MCEPA70VPS0","contact_box_1_title":"Register your product","contact_box_1_text":"You can get support that’s tailored to you, owner exclusives and more","contact_box_2_toggle":true,"contact_box_2_link_toggle":false,"contact_box_2_url":"#","contact_box_2_icon":"/hc/theming_assets/01HZJHZ5EVVG7X7PZ09AMPCZVB","contact_box_2_title":"Our helpline hours:","contact_box_2_text":"8:00am - 8:00pm CST Monday to Friday; 9:00am - 6:00pm CST Saturday","contact_box_3_toggle":true,"contact_box_3_link_toggle":false,"contact_box_3_url":"#","contact_box_3_icon":"/hc/theming_assets/01HZJHZ5SHEPDXGY6M6AF809VE","contact_box_3_title":"Follow us on X (Twitter)","contact_box_3_text":"Get the latest news and updates first","contact_box_4_toggle":true,"contact_box_4_link_toggle":true,"contact_box_4_url":"#","contact_box_4_icon":"/hc/theming_assets/01HZJHZ64J1EHFFSK5N3KWPHSW","contact_box_4_title":"YouTube Support","contact_box_4_text":"For how-to and support videos please visit our channel","toggle_facebook_icon":false,"facebook_url":"https://facebook.com","toggle_twitter_icon":false,"twitter_url":"https://x.com","toggle_youtube_icon":false,"youtube_url":"https://youtube.com","toggle_linkedin_icon":false,"linkedin_url":"https://linkedin.com","toggle_instagram_icon":false,"instagram_url":"https://www.instagram.com/","beautify_article":true,"info_title":"Note","success_title":"Success","warning_title":"Warning","danger_title":"Danger","show_articles_in_section":true,"show_article_author":false,"show_article_comments":false,"show_follow_article":false,"show_print_article":false,"show_article_sharing":false,"show_article_boxes":true,"article_boxes_icon_size":"2rem","article_box_1_toggle":false,"article_box_1_link_toggle":true,"article_box_1_url":"#","article_box_1_icon":"/hc/theming_assets/01HZJHZ52DPJCZ5MCEPA70VPS0","article_box_1_title":"Register your product","article_box_1_text":"You can get support that’s tailored to you, owner exclusives and more","article_box_2_toggle":false,"article_box_2_link_toggle":true,"article_box_2_url":"#","article_box_2_icon":"/hc/theming_assets/01HZJHZ5EVVG7X7PZ09AMPCZVB","article_box_2_title":"Our helpline hours:","article_box_2_text":"8:00am - 8:00pm CST Monday to Friday; 9:00am - 6:00pm CST Saturday","article_box_3_toggle":false,"article_box_3_link_toggle":true,"article_box_3_url":"#","article_box_3_icon":"/hc/theming_assets/01HZJHZ5SHEPDXGY6M6AF809VE","article_box_3_title":"Follow us on Twitter","article_box_3_text":"Get the latest news and updates first","article_box_4_toggle":false,"article_box_4_link_toggle":true,"article_box_4_url":"#","article_box_4_icon":"/hc/theming_assets/01HZJHZ64J1EHFFSK5N3KWPHSW","article_box_4_title":"YouTube Support","article_box_4_text":"Fow how-to and support videos please visit our channel","show_follow_section":false,"show_follow_community_post":true,"show_print_post":true,"show_community_post_sharing":true,"show_follow_community_topic":true,"show_new_request_tip":true,"new_request_tip_background":"#f3fafc","new_request_tip_text":"Aim to include as much information and detail in your request as possible to reduce delays between replies","error_page_articles_title":"These articles might be helpful","request_list_beta":false},"has_pci_credit_card_custom_field":true,"help_center_restricted":false,"is_assuming_someone_else":false,"flash_messages":[],"user_photo_editing_enabled":true,"user_preferred_locale":"en-us","base_locale":"en-us","login_url":"https://universalaudioinc.zendesk.com/access?locale=en-us\u0026brand_id=248709\u0026return_to=https%3A%2F%2Fhelp.uaudio.com%2Fhc%2Fen-us%2Farticles%2F30088622351636-Using-Multi-Output-Plug-Ins-in-LUNA","has_alternate_templates":true,"has_custom_statuses_enabled":true,"has_hc_generative_answers_setting_enabled":true,"has_suggested_initial_questions_enabled":false,"has_contentful_eap":false,"has_contentful_eap_eligible":false,"has_pdf_ingestion_eap":true,"has_pdf_ingestion_eap_eligible":true,"has_guide_service_catalog":true,"has_service_catalog_search_poc":true,"has_service_catalog_itam":false,"has_service_catalog_multibranding":false,"has_csat_reverse_2_scale_in_mobile":false,"has_trial_presumptive_setup":true,"has_unified_navigation":true,"has_unified_navigation_eap_access":true,"has_csat_bet365_branding":false,"has_csat_theming_integration_phase_1":false,"has_help_center_gen_search_follow_up_conversation":true,"version":"v27538","dev_mode":false};
+</script>
+
+  
+  
+  <script src="//static.zdassets.com/hc/assets/hc_enduser-51777e251fb3d84937711c2ab27f0a1b.js"></script>
+  <script type="text/javascript" src="/hc/theming_assets/622919/248709/script.js?digest=49648383363860"></script>
+  
+</body>
+</html>
