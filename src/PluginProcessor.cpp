@@ -286,9 +286,9 @@ void LMOneAudioProcessor::setStep (int lane, int step, juce::uint8 velocity)
     publishPattern (workingPattern);
 }
 
-void LMOneAudioProcessor::setPatternLength (int numSteps)
+void LMOneAudioProcessor::setPatternMeter (int num, int den, int rate)
 {
-    workingPattern.numSteps = juce::jlimit (1, Pattern::kMaxSteps, numSteps);
+    workingPattern.setMeter (num, den, rate);   // sets time sig + rate, recomputes numSteps
     publishPattern (workingPattern);
 }
 
@@ -579,7 +579,8 @@ void LMOneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     addEvent (p, metadata.samplePosition, msg.getFloatVelocity());
                     if (recording)
                     {
-                        const int step = sequencer.quantizeToNearestStep (metadata.samplePosition, pat.numSteps);
+                        const int step = sequencer.quantizeToNearestStep (metadata.samplePosition, pat.numSteps,
+                                                                          TimeGrid::stepPpq (pat.rate));
                         if (step >= 0)
                             pushRecordEvent (p, step,
                                 (juce::uint8) juce::jlimit (1, 127, juce::roundToInt (msg.getFloatVelocity() * 127.0f)));

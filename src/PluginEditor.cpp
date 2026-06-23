@@ -117,25 +117,45 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
     addAndMakeVisible (stepLed);
     addAndMakeVisible (tempoLed);
 
-    stepsLabel.setText ("STEPS", juce::dontSendNotification);
-    stepsLabel.setJustificationType (juce::Justification::centredRight);
-    stepsLabel.setFont (juce::FontOptions (10.5f, juce::Font::bold));
-    stepsLabel.setColour (juce::Label::textColourId, LMColours::orange);
-    addAndMakeVisible (stepsLabel);
-
-    stepsBox.addItem ("8",  8);
-    stepsBox.addItem ("16", 16);
-    stepsBox.addItem ("32", 32);
-    stepsBox.setColour (juce::ComboBox::textColourId,       juce::Colour (0xffff3322));  // LED red
-    stepsBox.setColour (juce::ComboBox::backgroundColourId, juce::Colour (0xff160a08));  // dark glass
-    stepsBox.setColour (juce::ComboBox::outlineColourId,    juce::Colours::black);
-    stepsBox.setSelectedId (processor.getNumSteps(), juce::dontSendNotification);
-    stepsBox.onChange = [this]
+    // Meter + Rate: the grid's time signature and step subdivision. Step count is
+    // derived from them, so these replace the old fixed 8/16/32 "Steps" picker.
+    auto styleGridBox = [] (juce::ComboBox& cb, const juce::String& tip)
     {
-        const int s = stepsBox.getSelectedId();
-        if (s > 0) { processor.setPatternLength (s); grid.reloadFromProcessor(); }
+        cb.setColour (juce::ComboBox::textColourId,       juce::Colour (0xffff3322));  // LED red
+        cb.setColour (juce::ComboBox::backgroundColourId, juce::Colour (0xff160a08));  // dark glass
+        cb.setColour (juce::ComboBox::outlineColourId,    juce::Colours::black);
+        cb.setJustificationType (juce::Justification::centred);
+        cb.setTooltip (tip);
     };
-    addAndMakeVisible (stepsBox);
+
+    for (int i = 0; i < (int) TimeGrid::meters().size(); ++i)
+    {
+        const auto m = TimeGrid::meters()[(size_t) i];
+        meterBox.addItem (juce::String (m.num) + "/" + juce::String (m.den), i + 1);
+    }
+    styleGridBox (meterBox, "Time signature");
+    meterBox.onChange = [this]
+    {
+        const int mi = meterBox.getSelectedId() - 1;
+        if (mi < 0) return;
+        const auto m = TimeGrid::meters()[(size_t) mi];
+        processor.setPatternMeter (m.num, m.den, processor.getRate());
+        grid.reloadFromProcessor();
+    };
+    addAndMakeVisible (meterBox);
+
+    for (int r = 0; r < TimeGrid::kNumRates; ++r)
+        rateBox.addItem (TimeGrid::rateName (r), r + 1);
+    styleGridBox (rateBox, "Step rate / subdivision (T = triplet)");
+    rateBox.onChange = [this]
+    {
+        const int r = rateBox.getSelectedId() - 1;
+        if (r < 0) return;
+        processor.setPatternMeter (processor.getTsNum(), processor.getTsDen(), r);
+        grid.reloadFromProcessor();
+    };
+    addAndMakeVisible (rateBox);
+    refreshMeterRate();
 
     clearButton.setTooltip (juce::String::fromUTF8 (
         "Clears the grid only \xE2\x80\x94 bank grooves are safe; click a slot to reload one"));
@@ -214,7 +234,7 @@ LMOneAudioProcessorEditor::LMOneAudioProcessorEditor (LMOneAudioProcessor& p)
         {
             processor.loadSlot (i);   // loads the preset, or empties the grid for an empty slot
             grid.reloadFromProcessor();
-            stepsBox.setSelectedId (processor.getNumSteps(), juce::dontSendNotification);
+            refreshMeterRate();
             refreshBankUI();
         };
         addAndMakeVisible (b);
@@ -249,7 +269,7 @@ void LMOneAudioProcessorEditor::changeListenerCallback (juce::ChangeBroadcaster*
         s->refreshSourceLabel();
 
     grid.reloadFromProcessor();
-    stepsBox.setSelectedId (processor.getNumSteps(), juce::dontSendNotification);
+    refreshMeterRate();
     refreshBankUI();
 }
 
@@ -332,9 +352,16 @@ void LMOneAudioProcessorEditor::gotoBank (int newBank)
 
     processor.loadSlot (slot);   // reflect this bank's slot (empties the grid for an empty preset)
     grid.reloadFromProcessor();
-    stepsBox.setSelectedId (processor.getNumSteps(), juce::dontSendNotification);
+    refreshMeterRate();
 
     refreshBankUI();
+}
+
+void LMOneAudioProcessorEditor::refreshMeterRate()
+{
+    meterBox.setSelectedId (TimeGrid::meterIndex (processor.getTsNum(), processor.getTsDen()) + 1,
+                            juce::dontSendNotification);
+    rateBox.setSelectedId (processor.getRate() + 1, juce::dontSendNotification);
 }
 
 void LMOneAudioProcessorEditor::refreshShuffleLeds()
@@ -502,8 +529,9 @@ void LMOneAudioProcessorEditor::resized()
         trb.removeFromLeft (6);
         recButton.setBounds  (trb.removeFromLeft (52));
         trb.removeFromLeft (14);
-        stepsLabel.setBounds (trb.removeFromLeft (46));
-        stepsBox.setBounds   (trb.removeFromLeft (72));
+        meterBox.setBounds (trb.removeFromLeft (56));   // time signature
+        trb.removeFromLeft (4);
+        rateBox.setBounds  (trb.removeFromLeft (56));   // step rate
         trb.removeFromLeft (8);
         clearButton.setBounds (trb.removeFromLeft (28).withSizeKeepingCentre (24, 24));   // small flat X
         trb.removeFromLeft (12);

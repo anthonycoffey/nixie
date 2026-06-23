@@ -105,8 +105,13 @@ public:
     // Working sequence (single, edited in the grid). Edits publish to the audio thread.
     Pattern getPattern() const { return workingPattern; }
     void    setStep (int lane, int step, juce::uint8 velocity);
-    void    setPatternLength (int numSteps);
+    void    setPatternMeter (int num, int den, int rate);   // sets time sig + rate; derives steps
     void    clearPattern();
+
+    // Current working-pattern meter + rate (for the editor's Meter / Rate selectors).
+    int  getTsNum() const noexcept { return workingPattern.tsNum; }
+    int  getTsDen() const noexcept { return workingPattern.tsDen; }
+    int  getRate()  const noexcept { return workingPattern.rate; }
     float   getSeqTempo() const noexcept { return seqTempoParam != nullptr ? seqTempoParam->load() : 120.0f; }
 
     // Preset library: 12 banks x 10 slots. Banks 1-10 are factory genre grooves;

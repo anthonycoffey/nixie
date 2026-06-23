@@ -40,6 +40,7 @@ private:
     void refreshBankUI();         // reflect the current bank + slot states
     void gotoBank (int newBank);  // change bank + auto-load the selected slot's groove
     void refreshShuffleLeds();    // push shuffle settings into the global + per-track LEDs
+    void refreshMeterRate();      // sync the Meter / Rate selectors to the working pattern
 
     LMOneAudioProcessor& processor;
     LMOneLookAndFeel     lookAndFeel;
@@ -65,8 +66,7 @@ private:
     juce::Slider     tempoSlider;
     juce::Label      tempoLabel;
     LedDisplay       stepLed { 2 }, tempoLed { 3 }, bankLed { 3 };
-    juce::ComboBox   stepsBox;
-    juce::Label      stepsLabel;
+    juce::ComboBox   meterBox, rateBox;   // time signature + step rate (replaces the Steps picker)
     XButton          clearButton;   // orange "X" — clears the grid
     juce::TextButton optionsButton;            // gear: holds Export MIDI + future options
     std::unique_ptr<juce::FileChooser> midiChooser;

@@ -51,11 +51,12 @@ public:
 
     // Nearest step to a note arriving at sampleOffset within the current block —
     // used by real-time record. Returns -1 when the sequencer isn't running.
-    int quantizeToNearestStep (int sampleOffset, int numSteps) const noexcept
+    int quantizeToNearestStep (int sampleOffset, int numSteps, double stepPpq) const noexcept
     {
         if (lastSource == Source::None) return -1;
         const double ppq = lastBlockPpq + lastPpqPerSample * (double) sampleOffset;
-        const long long nearest = (long long) std::llround (ppq / 0.25);   // 0.25 ppq = one 16th
+        const double sp  = stepPpq > 0.0 ? stepPpq : 0.25;
+        const long long nearest = (long long) std::llround (ppq / sp);
         const int n = juce::jmax (1, numSteps);
         return (int) (((nearest % n) + n) % n);
     }
@@ -98,11 +99,15 @@ public:
 
         const int    numSteps     = juce::jlimit (1, Pattern::kMaxSteps, pattern.numSteps);
         const int    numLanes     = juce::jlimit (1, Pattern::kMaxLanes, pattern.numLanes);
-        const double stepPpq      = 0.25; // 16th note
+        const double stepPpq      = TimeGrid::stepPpq (pattern.rate);   // 1/16, 1/8T, ...
         const double ppqPerSample = (bpm / 60.0 / juce::jmax (1.0, tr.sampleRate)) ;
 
         lastBlockPpq     = ppqAtStart;    // remembered so record can quantize to nearest step
         lastPpqPerSample = ppqPerSample;
+
+        // Swing delays odd steps on a duple grid; a triplet grid is already swung,
+        // so the shuffle amount is ignored there.
+        const bool tripletGrid = TimeGrid::isTriplet (pattern.rate);
 
         auto laneSwingAmt = [&tr] (int lane) -> double
         {
@@ -128,7 +133,8 @@ public:
             // swung lanes delayed by their own amount on odd 16ths.
             for (int lane = 0; lane < numLanes; ++lane)
             {
-                const double swingPpq = odd ? juce::jlimit (0.0, 1.0, laneSwingAmt (lane)) * 0.5 * stepPpq
+                const double swingPpq = (odd && ! tripletGrid)
+                                            ? juce::jlimit (0.0, 1.0, laneSwingAmt (lane)) * 0.5 * stepPpq
                                             : 0.0;
                 const double laneTrig = gridPpq + swingPpq;
 

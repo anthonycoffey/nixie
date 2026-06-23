@@ -109,6 +109,10 @@ void StepGridComponent::paint (juce::Graphics& g)
     const int   laneH   = juce::jmax (1, (getHeight() - gridTop) / numLanes);
     const float cellW   = (float) (getWidth() - kLabelW) / (float) numSteps;
 
+    // Beat-group boundaries (meter-aware): drive accents, tinting + divider lines.
+    bool beatStart[Pattern::kMaxSteps] = {};
+    TimeGrid::fillBeatStarts (pattern.tsNum, pattern.tsDen, pattern.rate, numSteps, beatStart);
+
     // --- Header: a row of LED lamps + step numbers above each column ---------
     const juce::Colour led (0xffff3322);
     for (int step = 0; step < numSteps; ++step)
@@ -122,7 +126,7 @@ void StepGridComponent::paint (juce::Graphics& g)
         g.setColour (on ? led : led.withAlpha (0.14f));
         g.fillEllipse (dot);
 
-        const bool beat = (step % 4 == 0);
+        const bool beat = beatStart[step];
         g.setColour (beat ? LMColours::orange.withAlpha (0.9f) : juce::Colours::grey.withAlpha (0.6f));
         g.setFont (juce::FontOptions (9.0f, beat ? juce::Font::bold : juce::Font::plain));
         g.drawText (juce::String (step + 1),
@@ -150,7 +154,7 @@ void StepGridComponent::paint (juce::Graphics& g)
             const int x2 = kLabelW + (int) std::round ((float) (step + 1) * cellW);
             const juce::Rectangle<int> inner = juce::Rectangle<int> (x, y, juce::jmax (1, x2 - x), laneH).reduced (1);
 
-            juce::Colour bg = (step % 4 == 0) ? juce::Colour (0xff26262c) : juce::Colour (0xff1d1d22);
+            juce::Colour bg = beatStart[step] ? juce::Colour (0xff26262c) : juce::Colour (0xff1d1d22);
             if (step == playingStep)
                 bg = bg.brighter (0.16f);   // subtle column tint; the LED above is the main cue
             g.setColour (bg);
@@ -165,6 +169,13 @@ void StepGridComponent::paint (juce::Graphics& g)
             }
         }
     }
+
+    // Beat-group dividers (stronger lines at each beat start) make the meter legible.
+    g.setColour (juce::Colours::black.withAlpha (0.55f));
+    for (int step = 1; step < numSteps; ++step)
+        if (beatStart[step])
+            g.drawVerticalLine (kLabelW + (int) std::round ((float) step * cellW),
+                                (float) gridTop, (float) getHeight());
 
     g.setColour (juce::Colours::black);
     g.drawVerticalLine (kLabelW, (float) gridTop, (float) getHeight());
