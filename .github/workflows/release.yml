@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    name: Build & publish macOS plugins
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure (CMake + JUCE)
+        run: cmake -B build -G Xcode
+
+      - name: Build (Release, universal binary)
+        run: cmake --build build --config Release --parallel
+
+      - name: Package AU / VST3 / Standalone
+        run: |
+          set -euo pipefail
+          art="build/Nixie_artefacts/Release"
+          mkdir -p dist
+          ditto -c -k --keepParent "$art/AU/Nixie.component"   "dist/Nixie-${GITHUB_REF_NAME}-AU.zip"
+          ditto -c -k --keepParent "$art/VST3/Nixie.vst3"      "dist/Nixie-${GITHUB_REF_NAME}-VST3.zip"
+          ditto -c -k --keepParent "$art/Standalone/Nixie.app" "dist/Nixie-${GITHUB_REF_NAME}-Standalone.zip"
+          ls -lh dist
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          body: |
+            **Nixie ${{ github.ref_name }}** — a software drum machine inspired by the classic Linn LM-1.
+
+            ### Install (macOS · universal — Apple Silicon + Intel)
+            - **AU** → unzip `Nixie-*-AU.zip` into `~/Library/Audio/Plug-Ins/Components/`
+            - **VST3** → unzip `Nixie-*-VST3.zip` into `~/Library/Audio/Plug-Ins/VST3/`
+            - **Standalone** → unzip `Nixie-*-Standalone.zip` and run the app
+
+            > ⚠️ These builds are **not notarized**. On first launch macOS may say "Apple cannot verify…". Right-click the file → **Open**, or run `xattr -dr com.apple.quarantine <file>` to clear the quarantine flag.

@@ -3,6 +3,19 @@
 All notable changes to Nixie. Versions follow the `CMakeLists.txt` project version
 and the git tags (`vX.Y.Z`).
 
+## [0.5.0] - 2026-06-29
+
+### Changed
+- **Renamed LM-1 → Nixie** for the public release (still inspired by the classic Linn
+  LM-1). New product name, faceplate, on-screen logo, and docs throughout. New AU/VST
+  identity — `PLUGIN_CODE` `Nix1`, manufacturer code `Coff`, bundle id
+  `com.anthonycoffey.nixie` — and the preset extension is now **`.nixiepreset`**.
+
+### Breaking
+- Hosts see Nixie as a **brand-new plugin**: existing LM-1 project/session recall does
+  not carry over, and old `.lm1preset` files (and the `~/Music/LM-1/Presets` folder)
+  are not read. Re-insert the plugin and re-save your presets.
+
 ## [0.4.2] - 2026-06-24
 
 ### Fixed
@@ -60,6 +73,7 @@ First tagged release — a playable AU/VST3/Standalone Nixie: 12 voices, per-voi
 sampling, host-synced step sequencer + grid, per-voice mixer, MIDI export
 (file + drag-out), and global Master / Lo-Fi / Tune.
 
+[0.5.0]: https://github.com/anthonycoffey/nixie/releases/tag/v0.5.0
 [0.4.2]: https://github.com/anthonycoffey/nixie/releases/tag/v0.4.2
 [0.4.1]: https://github.com/anthonycoffey/nixie/releases/tag/v0.4.1
 [0.4.0]: https://github.com/anthonycoffey/nixie/releases/tag/v0.4.0
