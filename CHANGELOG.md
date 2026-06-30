@@ -3,6 +3,15 @@
 All notable changes to Nixie. Versions follow the `CMakeLists.txt` project version
 and the git tags (`vX.Y.Z`).
 
+## [0.5.2] - 2026-06-30
+
+### Changed
+- **Decluttered the GLOBAL row.** Removed the global **Shuffle** control — per-track
+  swing (on the mixer strips) is now the only swing, and its "Follow" option is gone
+  (each track defaults to Straight). Removed the **Filter** and **Reso** knobs from the
+  panel; the filter params remain reachable via host automation. The GLOBAL row is now
+  seven controls: Master, Lo-Fi, Tune, Drive, Attack, Sustain, Glue.
+
 ## [0.5.1] - 2026-06-29
 
 ### Added
@@ -89,6 +98,7 @@ First tagged release — a playable AU/VST3/Standalone Nixie: 12 voices, per-voi
 sampling, host-synced step sequencer + grid, per-voice mixer, MIDI export
 (file + drag-out), and global Master / Lo-Fi / Tune.
 
+[0.5.2]: https://github.com/anthonycoffey/nixie/releases/tag/v0.5.2
 [0.5.1]: https://github.com/anthonycoffey/nixie/releases/tag/v0.5.1
 [0.5.0]: https://github.com/anthonycoffey/nixie/releases/tag/v0.5.0
 [0.4.2]: https://github.com/anthonycoffey/nixie/releases/tag/v0.4.2
